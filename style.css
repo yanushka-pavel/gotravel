@@ -1,4 +1,7 @@
-/* .test-class{
-width:5rem;
+.hidden {
+opacity: 0;
+} 
 
-} */
+--hidden{
+    opacity:0;
+}

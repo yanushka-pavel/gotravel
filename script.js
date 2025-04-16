@@ -1,21 +1,22 @@
 
-const circle01 = document.querySelector(".circle-01");
-const circle02 = document.querySelector(".circle-02");
-const circle03 = document.querySelector(".circle-03");
-const circle04 = document.querySelector(".circle-04");
-const circle05 = document.querySelector(".circle-05");
-const circle06 = document.querySelector(".circle-06");
+const circles = [];
+for (i=1; i<=6; i++) {
+circles.push(document.querySelector(`.circle-0${i}`))
+}
 
-const dash01 = document.querySelector(".dash-01");
-const dash02 = document.querySelector(".dash-02");
-const dash03 = document.querySelector(".dash-03");
-const dash04 = document.querySelector(".dash-04");
-const dash05 = document.querySelector(".dash-05");
+const dashes = [];
+for(j=1; j<=5; j++){
+    dashes.push(document.querySelector(`.dash-0${j}`));
+};
 
 
-const image01 = document.querySelector(".image-decoration.first");
-const image02 = document.querySelector(".image-decoration.second");
-const image03 = document.querySelector(".image-decoration.third");
-const image04 = document.querySelector(".image-decoration.fourth");
-const image05 = document.querySelector(".image-decoration.fifth");
+const imagesArr = ["first", "second", "third", "fourth", "fifth"];
+const images = imagesArr.map(function(imageClass){
+return document.querySelector(`.image-decoration.${imageClass}`)
+})
 
+images[0].classList.add("test-class");
+
+
+
+console.log("test branch");

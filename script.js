@@ -1,4 +1,6 @@
 
+
+
 const circle= [];
 for (i=1; i<=6; i++) {
 circle.push(document.querySelector(`.circle-0${i}`))
@@ -23,9 +25,13 @@ embed.style.visibility = "visible";
 
 const tl = gsap.timeline();
 const dashLength01 = dash[0].getTotalLength();
+const dashLength02 = dash[1].getTotalLength();
+const dashLength03 = dash[2].getTotalLength();
+const dashLength04 = dash[3].getTotalLength();
+const dashLength05 = dash[4].getTotalLength();
 
 window.onload = function (){
-
+setTimeout(() => {
     tl.fromTo(image[0],
         {opacity: 0, scale: 0},
         {opacity: 1, scale: 1, duration: 0.5, ease: "back.out(1.7)"}
@@ -38,9 +44,119 @@ window.onload = function (){
             opacity: 1,
             }, "<")
         .to(dash[0],{
-            strokeDashoffset: dashLength01/2 ,
-            duration: 2,
+            strokeDashoffset: 0,
+            duration: 1,
             ease: "power1.inOut"
         },"<")
 
+        tl.fromTo(
+            circle[0],
+            { opacity: 0, scale: 0, transformOrigin: "center center" },
+            { opacity: 1, scale: 1, duration: 0.5, ease: "back.out(1.5)" },
+            "<0.3"
+          );
+          tl.fromTo(
+            circle[1],
+            { opacity: 0, scale: 0, transformOrigin: "center center" },
+            { opacity: 1, scale: 1, duration: 0.5, ease: "back.out(1.5)" },
+            "<0.3"
+          );
+
+    tl.fromTo(image[1],
+                {opacity: 0, scale: 0},
+                {opacity: 1, scale: 1, duration: 0.5, ease: "back.out(1.7)"}, "<0.2"
+                )       
+                
+            .to(dash[1],{
+                 strokeDasharray: dashLength02,
+                 strokeDashoffset: dashLength02,
+                 duration:0,
+                 opacity: 1,
+                 }, "<")
+            .to(dash[1],{
+                strokeDashoffset: 0,
+                 duration: 1,
+                 ease: "power1.inOut"
+                },"<")   
+            tl.fromTo(
+                circle[2],
+                { opacity: 0, scale: 0, transformOrigin: "center center" },
+                { opacity: 1, scale: 1, duration: 0.5, ease: "back.out(1.5)" },
+                "<0.3"
+                );
+            tl.fromTo(
+                circle[3],
+                { opacity: 0, scale: 0, transformOrigin: "center center" },
+                { opacity: 1, scale: 1, duration: 0.5, ease: "back.out(1.5)" },
+                "<0.1"
+                );
+            tl.fromTo(
+                circle[4],
+                { opacity: 0, scale: 0, transformOrigin: "center center" },
+                { opacity: 1, scale: 1, duration: 0.5, ease: "back.out(1.5)" },
+                "<0.2");
+        tl.fromTo(image[2],
+            {opacity: 0, scale: 0},
+            {opacity: 1, scale: 1, duration: 0.5, ease: "back.out(1.7)"}, "<0.2"
+            )    
+            .to(dash[2],{
+                strokeDasharray: dashLength03,
+                strokeDashoffset: dashLength03,
+                duration:0,
+                opacity: 1,
+                }, "<")
+            .to(dash[2],{
+                strokeDashoffset: 0,
+                 duration: 1,
+                 ease: "power1.inOut"
+                },"<")  
+                tl.fromTo(
+                    circle[5],
+                    { opacity: 0, scale: 0, transformOrigin: "center center" },
+                    { opacity: 1, scale: 1, duration: 0.5, ease: "back.out(1.5)" },
+                    "<0.4"
+                    );
+            tl.fromTo(image[3],
+                {opacity: 0, scale: 0},
+                {opacity: 1, scale: 1, duration: 0.5, ease: "back.out(1.7)"}, "<0.2"
+                )  
+                .to(dash[3],{
+                    strokeDasharray: dashLength04,
+                    strokeDashoffset: dashLength04,
+                    duration:0,
+                    opacity: 1,
+                    }, "<0.2")
+                .to(dash[3],{
+                    strokeDashoffset: 0,
+                     duration: 1,
+                     ease: "power1.inOut"
+                    },"<") 
+            tl.fromTo(planeWrap,
+                {opacity: 0, scale: 0, transformOrigin: "center center" } ,
+                {opacity: 1, scale: 1, duration: 0.5, ease: "back.out(1.7)"}, "<0.6"
+                )   
+            tl.fromTo(planeItem,
+                {opacity: 0, scale: 0, transformOrigin: "center center" },
+                {opacity: 1, scale: 1, duration: 0.5, ease: "back.out(1.7)"}, "<"
+                )    
+                .to(dash[4],{
+                    strokeDasharray: dashLength05,
+                    strokeDashoffset: dashLength05,
+                    duration:0,
+                    opacity: 1,
+                    }, "<0.2")
+                .to(dash[4],{
+                    strokeDashoffset: 0,
+                     duration: 1,
+                     ease: "power1.inOut"
+                    },"<") 
+            tl.fromTo(image[4],
+                {opacity: 0, scale: 0},
+                {opacity: 1, scale: 1, duration: 0.5, ease: "back.out(1.7)"}, "<0.5"
+                )  
+            }, 800);
 };
+
+
+
+    

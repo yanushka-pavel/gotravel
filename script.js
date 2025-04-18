@@ -1,5 +1,6 @@
 
 
+
 const circle= [];
 for (i=1; i<=6; i++) {
 circle.push(document.querySelector(`.circle-0${i}`))
@@ -11,7 +12,9 @@ for(j=1; j<=5; j++){
 };
 
 
+
 const imagesArr = ["first", "second", "third", "fourth", "fifth", "sonar"];
+
 const image = imagesArr.map(function(imageClass){
 return document.querySelector(`.image-decoration.${imageClass}`)
 })
@@ -22,6 +25,7 @@ const embed = document.querySelector(".decoration_embed");
 
 embed.style.visibility = "visible";
 
+
 const tl = gsap.timeline({
     scrollTrigger: {
         trigger:".decoration-wrap",
@@ -30,7 +34,6 @@ const tl = gsap.timeline({
         toggleActions: "play none none none", // this tells it to play once
     }
 });
-
 
 const dashLength01 = dash[0].getTotalLength();
 const dashLength02 = dash[1].getTotalLength();

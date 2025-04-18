@@ -12,7 +12,9 @@ for(j=1; j<=5; j++){
 };
 
 
-const imagesArr = ["first", "second", "third", "fourth", "fifth"];
+
+const imagesArr = ["first", "second", "third", "fourth", "fifth", "sonar"];
+
 const image = imagesArr.map(function(imageClass){
 return document.querySelector(`.image-decoration.${imageClass}`)
 })
@@ -23,7 +25,16 @@ const embed = document.querySelector(".decoration_embed");
 
 embed.style.visibility = "visible";
 
-const tl = gsap.timeline();
+
+const tl = gsap.timeline({
+    scrollTrigger: {
+        trigger:".decoration-wrap",
+        start: "top 80%", // When the top of the section reaches 80% of the viewport
+        once: true, // Makes the animation smooth and tied to scroll position
+        toggleActions: "play none none none", // this tells it to play once
+    }
+});
+
 const dashLength01 = dash[0].getTotalLength();
 const dashLength02 = dash[1].getTotalLength();
 const dashLength03 = dash[2].getTotalLength();
@@ -154,7 +165,24 @@ setTimeout(() => {
                 {opacity: 0, scale: 0},
                 {opacity: 1, scale: 1, duration: 0.5, ease: "back.out(1.7)"}, "<0.5"
                 )  
+
+
+            tl.to(image[5], 
+                {
+                scale: 2,
+                duration: 3,
+                ease: "power1.inOut",
+                repeat: -1,
+                repeatDelay: 0.5,
+                keyframes: [
+                    {opacity: 0.5, duration: 1},
+                    {opacity: 0.5, duration: 0.5},
+                    {opacity: 0, duration: 1.5}
+                ]
+                }, "<0.5");
             }, 800);
+
+           
 };
 
 

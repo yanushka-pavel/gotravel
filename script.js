@@ -22,6 +22,8 @@ return document.querySelector(`.image-decoration.${imageClass}`)
 const planeWrap = document.querySelector(".plane-wrap");
 const planeItem = document.querySelector(".plane-item");
 const embed = document.querySelector(".decoration_embed");
+const phone = document.querySelector(".home_hero_item-right");
+const leftContent = document.querySelector(".home_hero_item-left");
 
 embed.style.visibility = "visible";
 
@@ -180,10 +182,71 @@ setTimeout(() => {
                     {opacity: 0, duration: 1.5}
                 ]
                 }, "<0.5");
+
             }, 800);
 
            
 };
+
+const zs = gsap.timeline({
+    scrollTrigger: {
+        trigger: ".section_home-hero",
+        start: "10%top top",
+        end: "bottom top",
+        scrub: true,
+        invalidateOnRefresh: true,
+      }
+    });
+    
+
+    zs.to(phone, {
+        x: () => window.innerWidth / 2 - phone.getBoundingClientRect().left - phone.offsetWidth / 2,
+        y: () => window.innerHeight / 2 - phone.getBoundingClientRect().top - phone.offsetHeight / 2,
+        ease: "power2.out",
+        duration: 1.5,
+        scale: 1.4,
+      }); // start at beginning
+      
+      // Simultaneously shrink and move the left content
+      zs.to(leftContent, {
+        scale: 0.5,
+        x: "-10vw",
+        opacity: 0.5,
+        ease: "none",
+        duration: 1.5,
+      },"<");
+      
+      // Keyframe 2: Zoom in fully
+      zs.to(phone, {
+        scale: 5,
+        ease: "power2.out",
+        duration: 2,
+      });
+      zs.to(leftContent, {
+        opacity: 0,
+        ease: "none",
+        duration: 0.3,
+      },"<0.1");
+      zs.to(".hero_cover",{
+        opacity:0.8,
+        duration: 0.3
+      },"<0.8")
+    //   zs.to(".hero_cover",{
+    //     opacity:0,
+    //     duration: 0.3
+    //   },">1.5");
+    
+      gsap.to(".hero_cover", {
+        opacity: 0,
+        ease: "power1.out",
+        duration: 0.5,
+        scrollTrigger: {
+          trigger: ".section_home-about", // Replace with your actual class or ID
+          start: "top top",      // When top of next section hits center of viewport
+          scrub: true,
+        }
+      });
+
 
 
 

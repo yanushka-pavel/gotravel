@@ -43,7 +43,7 @@ const dashLength03 = dash[2].getTotalLength();
 const dashLength04 = dash[3].getTotalLength();
 const dashLength05 = dash[4].getTotalLength();
 
-window.onload = function (){
+window.onload = function (){ // elements animation
 setTimeout(() => {
     tl.fromTo(image[0],
         {opacity: 0, scale: 0},
@@ -218,7 +218,7 @@ const zs = gsap.timeline({
       
       // Keyframe 2: Zoom in fully
       zs.to(phone, {
-        scale: 5,
+        scale: 7,
         ease: "power2.out",
         duration: 2,
       });
@@ -228,24 +228,38 @@ const zs = gsap.timeline({
         duration: 0.3,
       },"<0.1");
       zs.to(".hero_cover",{
-        opacity:0.8,
-        duration: 0.3
-      },"<0.8")
-    //   zs.to(".hero_cover",{
-    //     opacity:0,
-    //     duration: 0.3
-    //   },">1.5");
-    
-      gsap.to(".hero_cover", {
+        opacity:1,
+        duration: 0.3,
+      },"<0.5");
+      zs.to(".scroll-wrap", {
+        opacity: 1,
+        duration: 0.3,
+        ease:"power1.inOut",
+      }, "<0.2");
+   
+      zs.to(".hero_cover", {
         opacity: 0,
         ease: "power1.out",
-        duration: 0.5,
+        duration: 0.1,
         scrollTrigger: {
           trigger: ".section_home-about", // Replace with your actual class or ID
           start: "top top",      // When top of next section hits center of viewport
           scrub: true,
+          pin:true,
+          end: "+=200%",
         }
-      });
+      },"<");
+      zs.to([embed, ".decoration-wrap"], {
+        opacity: 0,
+        duration: 0.5,
+        ease: "power1.out",
+      }, "-=1")
+      zs.to(".scroll-wrap", {
+        opacity: 0,
+        duration: 0.4,
+        ease: "power1.inOut",
+      },"<1.5");
+   
 
 
 

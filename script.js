@@ -258,7 +258,10 @@ const zs = gsap.timeline({
         opacity: 0,
         duration: 0.4,
         ease: "power1.inOut",
-      },"<1.5");
+      },"<1.5")
+      zs.to('.nav_component', {
+        backgroundColor: "#e9f0e8",
+      },"<");
    
 
 

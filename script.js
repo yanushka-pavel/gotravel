@@ -32,7 +32,7 @@ embed.style.visibility = "visible";
 const tl = gsap.timeline({
     scrollTrigger: {
         trigger:".decoration-wrap",
-        start: "top 80%", // When the top of the section reaches 80% of the viewport
+        start: "top 50%", // When the top of the section reaches 80% of the viewport
         once: true, // Makes the animation smooth and tied to scroll position
         toggleActions: "play none none none", // this tells it to play once
     }
@@ -191,6 +191,13 @@ setTimeout(() => {
 };
 
 const mm = gsap.matchMedia();
+let xValue;
+let yValue;
+function calcultePhone (){
+    const rect = phone.getBoundingClientRect();
+    xValue = window.innerWidth / 2 - rect.left - phone.offsetWidth / 2;
+    yValue = window.innerWidth / 2 - rect.top - phone.offsetWidth / 2;
+}
 mm.add(
     {
         isDesktop: "(min-width: 992px)",
@@ -280,22 +287,24 @@ mm.add(
         else{
             const zs = gsap.timeline({
                 scrollTrigger: {
-                    trigger: ".section_home-hero",
+                    trigger: ".home_hero_item-right",
                     start:"center center",
-                    end: "bottom top",
                     scrub: true,
+                    pin: true,
+                    end: "+=200%",
                     invalidateOnRefresh: true,
+                    // onRefresh: calcultePhone,
                   }
                 });
                 
             
                 zs.to(phone, {
-                    x: () => window.innerWidth / 2 - phone.getBoundingClientRect().left - phone.offsetWidth / 2,
-                    y: () => window.innerHeight / 2 - phone.getBoundingClientRect().top - phone.offsetHeight / 2,
+                    x: () => xValue,
+                    y: () => yValue,
                     ease: "power2.out",
                     duration: 1.5,
                     scale: 1.4,
-                  }); 
+                  },"<"); 
                   
                  
                   zs.to(leftContent, {

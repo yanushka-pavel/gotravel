@@ -24,6 +24,7 @@ const planeItem = document.querySelector(".plane-item");
 const embed = document.querySelector(".decoration_embed");
 const phone = document.querySelector(".home_hero_item-right");
 const leftContent = document.querySelector(".home_hero_item-left");
+const embedWrap = document.querySelector('decoration-embed_wrap');
 
 embed.style.visibility = "visible";
 
@@ -45,7 +46,8 @@ const dashLength05 = dash[4].getTotalLength();
 
 window.onload = function (){ // elements animation
 setTimeout(() => {
-    tl.fromTo(image[0],
+    
+        tl.fromTo(image[0],
         {opacity: 0, scale: 0},
         {opacity: 1, scale: 1, duration: 0.5, ease: "back.out(1.7)"}
         )
@@ -188,81 +190,173 @@ setTimeout(() => {
            
 };
 
-const zs = gsap.timeline({
-    scrollTrigger: {
-        trigger: ".section_home-hero",
-        start: "10%top top",
-        end: "bottom top",
-        scrub: true,
-        invalidateOnRefresh: true,
-      }
-    });
-    
-
-    zs.to(phone, {
-        x: () => window.innerWidth / 2 - phone.getBoundingClientRect().left - phone.offsetWidth / 2,
-        y: () => window.innerHeight / 2 - phone.getBoundingClientRect().top - phone.offsetHeight / 2,
-        ease: "power2.out",
-        duration: 1.5,
-        scale: 1.4,
-      }); // start at beginning
-      
-      // Simultaneously shrink and move the left content
-      zs.to(leftContent, {
-        scale: 0.5,
-        x: "-10vw",
-        opacity: 0.5,
-        ease: "none",
-        duration: 1.5,
-      },"<");
-      
-      // Keyframe 2: Zoom in fully
-      zs.to(phone, {
-        scale: 7,
-        ease: "power2.out",
-        duration: 2,
-      });
-      zs.to(leftContent, {
-        opacity: 0,
-        ease: "none",
-        duration: 0.3,
-      },"<0.1");
-      zs.to(".hero_cover",{
-        opacity:1,
-        duration: 0.3,
-      },"<0.5");
-      zs.to(".scroll-wrap", {
-        opacity: 1,
-        duration: 0.3,
-        ease:"power1.inOut",
-      }, "<0.2");
-   
-      zs.to(".hero_cover", {
-        opacity: 0,
-        ease: "power1.out",
-        duration: 0.1,
-        scrollTrigger: {
-          trigger: ".section_home-about", // Replace with your actual class or ID
-          start: "top top",      // When top of next section hits center of viewport
-          scrub: true,
-          pin:true,
-          end: "+=200%",
+const mm = gsap.matchMedia();
+mm.add(
+    {
+        isDesktop: "(min-width: 992px)",
+        isTablet: "(min-width: 767px) and (max-width: 991px)",
+        isMobileLandscape: "(min-width:479px) and (max-width: 766px)",
+        isMobile: "(max-width: 478px)",
+    },
+    (context) => {
+        const {isDesktop, isTablet, isMobileLandscape, isMobile} = context.conditions;
+        if(isDesktop){
+            const zs = gsap.timeline({
+                scrollTrigger: {
+                    trigger: ".section_home-hero",
+                    start: "10%top top",
+                    end: "bottom top",
+                    scrub: true,
+                    invalidateOnRefresh: true,
+                  }
+                });
+                
+            
+                zs.to(phone, {
+                    x: () => window.innerWidth / 2 - phone.getBoundingClientRect().left - phone.offsetWidth / 2,
+                    y: () => window.innerHeight / 2 - phone.getBoundingClientRect().top - phone.offsetHeight / 2,
+                    ease: "power2.out",
+                    duration: 1.5,
+                    scale: 1.4,
+                  }); 
+                  
+                 
+                  zs.to(leftContent, {
+                    scale: 0.5,
+                    x: "-10vw",
+                    opacity: 0.5,
+                    ease: "none",
+                    duration: 1.5,
+                  },"<");
+                  
+                  
+                  zs.to(phone, {
+                    scale: 7,
+                    ease: "power2.out",
+                    duration: 2,
+                  });
+                  zs.to(leftContent, {
+                    opacity: 0,
+                    ease: "none",
+                    duration: 0.3,
+                  },"<0.1");
+                  zs.to(".hero_cover",{
+                    opacity:1,
+                    duration: 0.3,
+                  },"<0.5");
+                  zs.to(".scroll-wrap", {
+                    opacity: 1,
+                    duration: 0.3,
+                    ease:"power1.inOut",
+                  }, "<0.2");
+               
+                  zs.to(".hero_cover", {
+                    opacity: 0,
+                    ease: "power1.out",
+                    duration: 0.1,
+                    scrollTrigger: {
+                      trigger: ".section_home-about", // Replace with your actual class or ID
+                      start: "top top",      // When top of next section hits center of viewport
+                      scrub: true,
+                      pin:true,
+                      end: "+=200%",
+                    }
+                  },"<");
+                  zs.to([embed, ".decoration-wrap"], {
+                    opacity: 0,
+                    duration: 0.5,
+                    ease: "power1.out",
+                  }, "-=1")
+                  zs.to(".scroll-wrap", {
+                    opacity: 0,
+                    duration: 0.4,
+                    ease: "power1.inOut",
+                  },"<1.5")
+                  zs.to('.nav_component', {
+                    backgroundColor: "#e9f0e8",
+                  },"<");
+               
         }
-      },"<");
-      zs.to([embed, ".decoration-wrap"], {
-        opacity: 0,
-        duration: 0.5,
-        ease: "power1.out",
-      }, "-=1")
-      zs.to(".scroll-wrap", {
-        opacity: 0,
-        duration: 0.4,
-        ease: "power1.inOut",
-      },"<1.5")
-      zs.to('.nav_component', {
-        backgroundColor: "#e9f0e8",
-      },"<");
-   
+        else{
+            const zs = gsap.timeline({
+                scrollTrigger: {
+                    trigger: ".section_home-hero",
+                    start:"center center",
+                    end: "bottom top",
+                    scrub: true,
+                    invalidateOnRefresh: true,
+                  }
+                });
+                
+            
+                zs.to(phone, {
+                    x: () => window.innerWidth / 2 - phone.getBoundingClientRect().left - phone.offsetWidth / 2,
+                    y: () => window.innerHeight / 2 - phone.getBoundingClientRect().top - phone.offsetHeight / 2,
+                    ease: "power2.out",
+                    duration: 1.5,
+                    scale: 1.4,
+                  }); 
+                  
+                 
+                  zs.to(leftContent, {
+                    scale: 0.5,
+                    x: "-10vw",
+                    opacity: 0.5,
+                    ease: "none",
+                    duration: 1.5,
+                  },"<");
+                  
+                  
+                  zs.to(phone, {
+                    scale: 5,
+                    ease: "power2.out",
+                    duration: 2,
+                  });
+                  zs.to(leftContent, {
+                    opacity: 0,
+                    ease: "none",
+                    duration: 0.3,
+                  },"<0.1");
+                  zs.to(".hero_cover",{
+                    opacity:1,
+                    duration: 0.3,
+                  },"<0.5");
+                  zs.to(".scroll-wrap", {
+                    opacity: 1,
+                    duration: 0.3,
+                    ease:"power1.inOut",
+                  }, "<0.2");
+               
+                  zs.to(".hero_cover", {
+                    opacity: 0,
+                    ease: "power1.out",
+                    duration: 0.1,
+                    scrollTrigger: {
+                      trigger: ".section_home-about", // Replace with your actual class or ID
+                      start: "top top",      // When top of next section hits center of viewport
+                      scrub: true,
+                      pin:true,
+                      end: "+=200%",
+                    }
+                  },"<");
+                  zs.to([embed, ".decoration-wrap"], {
+                    opacity: 0,
+                    duration: 0.5,
+                    ease: "power1.out",
+                  }, "-=1")
+                  zs.to(".scroll-wrap", {
+                    opacity: 0,
+                    duration: 0.4,
+                    ease: "power1.inOut",
+                  },"<1.5")
+                  zs.to('.nav_component', {
+                    backgroundColor: "#e9f0e8",
+                  },"<");
+               
+        }
+    }
+);
+
 
 
 

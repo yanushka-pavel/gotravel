@@ -1,6 +1,4 @@
 
-
-
 const circle= [];
 for (i=1; i<=6; i++) {
 circle.push(document.querySelector(`.circle-0${i}`))
@@ -25,6 +23,7 @@ const embed = document.querySelector(".decoration_embed");
 const phone = document.querySelector(".home_hero_item-right");
 const leftContent = document.querySelector(".home_hero_item-left");
 const embedWrap = document.querySelector('decoration-embed_wrap');
+const homeWrap = document.querySelector('.home_hero_wrapper');
 
 embed.style.visibility = "visible";
 
@@ -32,7 +31,7 @@ embed.style.visibility = "visible";
 const tl = gsap.timeline({
     scrollTrigger: {
         trigger:".decoration-wrap",
-        start: "top 50%", // When the top of the section reaches 80% of the viewport
+        start: "top 50%", // When the top of the section reaches 50% of the viewport
         once: true, // Makes the animation smooth and tied to scroll position
         toggleActions: "play none none none", // this tells it to play once
     }
@@ -193,11 +192,19 @@ setTimeout(() => {
 const mm = gsap.matchMedia();
 let xValue;
 let yValue;
-function calcultePhone (){
-    const rect = phone.getBoundingClientRect();
-    xValue = window.innerWidth / 2 - rect.left - phone.offsetWidth / 2;
-    yValue = window.innerWidth / 2 - rect.top - phone.offsetWidth / 2;
-}
+
+ function calculatePhone() {
+    const wrapperRect = homeWrap.getBoundingClientRect();
+    const phoneRect = phone.getBoundingClientRect();
+    xValue = wrapperRect.left + wrapperRect.width / 2 - phoneRect.width/2 - phoneRect.left;
+    // console.log(` wrapperWidth is ${wrapperRect.width}, rect left is ${phoneRect.left} and phone offset is ${phone.offsetWidth}`);
+    return { xValue, yValue};
+    
+};
+calculatePhone();
+window.addEventListener('resize', calculatePhone);
+
+
 mm.add(
     {
         isDesktop: "(min-width: 992px)",
@@ -220,8 +227,7 @@ mm.add(
                 
             
                 zs.to(phone, {
-                    x: () => window.innerWidth / 2 - phone.getBoundingClientRect().left - phone.offsetWidth / 2,
-                    y: () => window.innerHeight / 2 - phone.getBoundingClientRect().top - phone.offsetHeight / 2,
+                    x: () => calculatePhone().xValue,
                     ease: "power2.out",
                     duration: 1.5,
                     scale: 1.4,
@@ -257,18 +263,18 @@ mm.add(
                     ease:"power1.inOut",
                   }, "<0.2");
                
-                  zs.to(".hero_cover", {
-                    opacity: 0,
-                    ease: "power1.out",
-                    duration: 0.1,
-                    scrollTrigger: {
-                      trigger: ".section_home-about", // Replace with your actual class or ID
-                      start: "top top",      // When top of next section hits center of viewport
-                      scrub: true,
-                      pin:true,
-                      end: "+=200%",
-                    }
-                  },"<");
+                //   zs.to(".hero_cover", {
+                //     opacity: 0,
+                //     ease: "power1.out",
+                //     duration: 0.1,
+                //     scrollTrigger: {
+                //       trigger: ".section_home-about", 
+                //       start: "top top",      // When top of next section hits top of viewport
+                //       scrub: true,
+                //       toggleActions: "play reverse play reverse",
+                //       invalidateOnRefresh: true,
+              
+                //   },"<");
                   zs.to([embed, ".decoration-wrap"], {
                     opacity: 0,
                     duration: 0.5,
@@ -293,14 +299,12 @@ mm.add(
                     pin: true,
                     end: "+=200%",
                     invalidateOnRefresh: true,
-                    // onRefresh: calcultePhone,
                   }
                 });
                 
             
                 zs.to(phone, {
-                    x: () => xValue,
-                    y: () => yValue,
+                    x: () => calculatePhone().xValue,
                     ease: "power2.out",
                     duration: 1.5,
                     scale: 1.4,
@@ -344,8 +348,6 @@ mm.add(
                       trigger: ".section_home-about", // Replace with your actual class or ID
                       start: "top top",      // When top of next section hits center of viewport
                       scrub: true,
-                      pin:true,
-                      end: "+=200%",
                     }
                   },"<");
                   zs.to([embed, ".decoration-wrap"], {
@@ -365,9 +367,15 @@ mm.add(
         }
     }
 );
+// window.addEventListener("resize", () => {
+//     ScrollTrigger.refresh();
+//   });
 
-
-
+// document.addEventListener('visibilitychange', () => {
+//     if (document.visibilityState === 'visible') {
+//       ScrollTrigger.refresh();
+//     }
+//   });
 
 
     

@@ -12,7 +12,6 @@ for(j=1; j<=5; j++){
 
 
 const imagesArr = ["first", "second", "third", "fourth", "fifth", "sonar"];
-
 const image = imagesArr.map(function(imageClass){
 return document.querySelector(`.image-decoration.${imageClass}`)
 })
@@ -24,6 +23,7 @@ const phone = document.querySelector(".home_hero_item-right");
 const leftContent = document.querySelector(".home_hero_item-left");
 const embedWrap = document.querySelector('decoration-embed_wrap');
 const homeWrap = document.querySelector('.home_hero_wrapper');
+const sectionHero = document.querySelector(".section_home-hero");
 
 embed.style.visibility = "visible";
 
@@ -204,6 +204,15 @@ let yValue;
 calculatePhone();
 window.addEventListener('resize', calculatePhone);
 
+function logSectionSize(){ //function to log resize of the hero section
+    
+    const sectionRect = sectionHero.getBoundingClientRect();
+    let sectionHeroSize = sectionRect.height;
+    console.log(`section size is ${sectionHeroSize}`);
+};
+window.addEventListener('resize', logSectionSize); //event listener for logSectionSize on resize of the screen
+
+
 
 mm.add(
     {
@@ -222,6 +231,7 @@ mm.add(
                     end: "bottom top",
                     scrub: true,
                     invalidateOnRefresh: true,
+
                   }
                 });
                 
@@ -253,7 +263,10 @@ mm.add(
                     ease: "none",
                     duration: 0.3,
                   },"<0.1");
-                  zs.to(".hero_cover",{
+                  zs.fromTo(".hero_cover",{
+                    visibility: "visible",
+                    opacity: 0,
+                  },{
                     opacity:1,
                     duration: 0.3,
                   },"<0.5");
@@ -263,18 +276,7 @@ mm.add(
                     ease:"power1.inOut",
                   }, "<0.2");
                
-                //   zs.to(".hero_cover", {
-                //     opacity: 0,
-                //     ease: "power1.out",
-                //     duration: 0.1,
-                //     scrollTrigger: {
-                //       trigger: ".section_home-about", 
-                //       start: "top top",      // When top of next section hits top of viewport
-                //       scrub: true,
-                //       toggleActions: "play reverse play reverse",
-                //       invalidateOnRefresh: true,
-              
-                //   },"<");
+                  
                   zs.to([embed, ".decoration-wrap"], {
                     opacity: 0,
                     duration: 0.5,
@@ -284,11 +286,24 @@ mm.add(
                     opacity: 0,
                     duration: 0.4,
                     ease: "power1.inOut",
-                  },"<1.5")
+                  },"<2")
                   zs.to('.nav_component', {
                     backgroundColor: "#e9f0e8",
                   },"<");
                
+                  const hc = gsap.timeline( {
+                    scrollTrigger: {
+                      trigger: ".section_home-about-wrap", 
+                      start: "top top",      // When top of next section hits top of viewport
+                      scrub: true,
+                      invalidateOnRefresh: true,
+                      end: "center top",
+                    }
+                  });
+                  hc.to(".hero_cover", {
+                    opacity: 0,
+                    ease: "power1.out",
+                  })
         }
         else{
             const zs = gsap.timeline({
@@ -297,7 +312,7 @@ mm.add(
                     start:"center center",
                     scrub: true,
                     pin: true,
-                    end: "+=200%",
+                    end: "+=300%",
                     invalidateOnRefresh: true,
                   }
                 });
@@ -330,26 +345,18 @@ mm.add(
                     ease: "none",
                     duration: 0.3,
                   },"<0.1");
-                  zs.to(".hero_cover",{
+                  zs.fromTo(".hero_cover",{
+                    visibility: "visible",
+                    opacity: 0,
+                  },{
                     opacity:1,
                     duration: 0.3,
                   },"<0.5");
                   zs.to(".scroll-wrap", {
                     opacity: 1,
-                    duration: 0.3,
+                    duration: 5,
                     ease:"power1.inOut",
                   }, "<0.2");
-               
-                  zs.to(".hero_cover", {
-                    opacity: 0,
-                    ease: "power1.out",
-                    duration: 0.1,
-                    scrollTrigger: {
-                      trigger: ".section_home-about", // Replace with your actual class or ID
-                      start: "top top",      // When top of next section hits center of viewport
-                      scrub: true,
-                    }
-                  },"<");
                   zs.to([embed, ".decoration-wrap"], {
                     opacity: 0,
                     duration: 0.5,
@@ -357,19 +364,32 @@ mm.add(
                   }, "-=1")
                   zs.to(".scroll-wrap", {
                     opacity: 0,
-                    duration: 0.4,
+                    duration: 4,
                     ease: "power1.inOut",
-                  },"<1.5")
+                  },">")
                   zs.to('.nav_component', {
                     backgroundColor: "#e9f0e8",
                   },"<");
+
+
+                  const hc = gsap.timeline( {
+                    scrollTrigger: {
+                      trigger: ".section_home-about-wrap", 
+                      start: "top top",      // When top of next section hits top of viewport
+                      scrub: true,
+                      invalidateOnRefresh: true,
+                      end: "center top",
+                    }
+                  });
+                  hc.to(".hero_cover", {
+                    opacity: 0,
+                    ease: "power1.out",
+                  })
                
         }
     }
 );
-// window.addEventListener("resize", () => {
-//     ScrollTrigger.refresh();
-//   });
+
 
 // document.addEventListener('visibilitychange', () => {
 //     if (document.visibilityState === 'visible') {

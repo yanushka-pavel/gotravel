@@ -1,20 +1,30 @@
 
-const circle= [];
+const circle= []; // assigning circles classes to an array
 for (i=1; i<=6; i++) {
 circle.push(document.querySelector(`.circle-0${i}`))
 }
 
-const dash = [];
+const dash = []; // assigning dashes classes to an array
 for(j=1; j<=5; j++){
     dash.push(document.querySelector(`.dash-0${j}`));
 };
 
-
-
-const imagesArr = ["first", "second", "third", "fourth", "fifth", "sonar"];
+const imagesArr = ["first", "second", "third", "fourth", "fifth", "sonar"]; // assigning images classes to an array with map array method
 const image = imagesArr.map(function(imageClass){
 return document.querySelector(`.image-decoration.${imageClass}`)
 })
+
+const dashLength = []; // loop for assigning dash length to the new array
+for (k=0; k<dash.length; k++){
+   let dashValue = dash[k].getTotalLength();
+   dashLength.push(dashValue);
+    }
+    // console.log(dashLength[2]);
+
+const line = []; //lines declaration
+    for (l=1; l<=5; l++){
+    line.push(document.querySelector(`.line-0${l}`));
+    }
 
 const planeWrap = document.querySelector(".plane-wrap");
 const planeItem = document.querySelector(".plane-item");
@@ -27,8 +37,7 @@ const sectionHero = document.querySelector(".section_home-hero");
 
 embed.style.visibility = "visible";
 
-
-const tl = gsap.timeline({
+const tl = gsap.timeline({ //declaration of tl gsap animation timeline
     scrollTrigger: {
         trigger:".decoration-wrap",
         start: "top 50%", // When the top of the section reaches 50% of the viewport
@@ -36,12 +45,6 @@ const tl = gsap.timeline({
         toggleActions: "play none none none", // this tells it to play once
     }
 });
-
-const dashLength01 = dash[0].getTotalLength();
-const dashLength02 = dash[1].getTotalLength();
-const dashLength03 = dash[2].getTotalLength();
-const dashLength04 = dash[3].getTotalLength();
-const dashLength05 = dash[4].getTotalLength();
 
 window.onload = function (){ // elements animation
 setTimeout(() => {
@@ -52,8 +55,8 @@ setTimeout(() => {
         )
         
         .to(dash[0],{
-            strokeDasharray: dashLength01,
-            strokeDashoffset: dashLength01,
+            strokeDasharray: dashLength[0],
+            strokeDashoffset: dashLength[0],
             duration:0,
             opacity: 1,
             }, "<")
@@ -82,8 +85,8 @@ setTimeout(() => {
                 )       
                 
             .to(dash[1],{
-                 strokeDasharray: dashLength02,
-                 strokeDashoffset: dashLength02,
+                 strokeDasharray: dashLength[1],
+                 strokeDashoffset: dashLength[1],
                  duration:0,
                  opacity: 1,
                  }, "<")
@@ -114,8 +117,8 @@ setTimeout(() => {
             {opacity: 1, scale: 1, duration: 0.5, ease: "back.out(1.7)"}, "<0.2"
             )    
             .to(dash[2],{
-                strokeDasharray: dashLength03,
-                strokeDashoffset: dashLength03,
+                strokeDasharray: dashLength[2],
+                strokeDashoffset: dashLength[2],
                 duration:0,
                 opacity: 1,
                 }, "<")
@@ -135,8 +138,8 @@ setTimeout(() => {
                 {opacity: 1, scale: 1, duration: 0.5, ease: "back.out(1.7)"}, "<0.2"
                 )  
                 .to(dash[3],{
-                    strokeDasharray: dashLength04,
-                    strokeDashoffset: dashLength04,
+                    strokeDasharray: dashLength[3],
+                    strokeDashoffset: dashLength[3],
                     duration:0,
                     opacity: 1,
                     }, "<0.2")
@@ -154,8 +157,8 @@ setTimeout(() => {
                 {opacity: 1, scale: 1, duration: 0.5, ease: "back.out(1.7)"}, "<"
                 )    
                 .to(dash[4],{
-                    strokeDasharray: dashLength05,
-                    strokeDashoffset: dashLength05,
+                    strokeDasharray: dashLength[4],
+                    strokeDashoffset: dashLength[4],
                     duration:0,
                     opacity: 1,
                     }, "<0.2")
@@ -191,28 +194,24 @@ setTimeout(() => {
 
 const mm = gsap.matchMedia();
 let xValue;
-let yValue;
-
- function calculatePhone() {
-    const wrapperRect = homeWrap.getBoundingClientRect();
-    const phoneRect = phone.getBoundingClientRect();
+ function calculatePhone() { //calculating center pixles of the phone and phone wrap
+    const wrapperRect = homeWrap.getBoundingClientRect(); // calculating sizes of the phone wrapper
+    const phoneRect = phone.getBoundingClientRect(); // calculating phone sizes
     xValue = wrapperRect.left + wrapperRect.width / 2 - phoneRect.width/2 - phoneRect.left;
     // console.log(` wrapperWidth is ${wrapperRect.width}, rect left is ${phoneRect.left} and phone offset is ${phone.offsetWidth}`);
-    return { xValue, yValue};
+    return {xValue};
     
 };
 calculatePhone();
 window.addEventListener('resize', calculatePhone);
 
-function logSectionSize(){ //function to log resize of the hero section
+function logSectionSize(){ //function to log resize of the hero section just for info
     
     const sectionRect = sectionHero.getBoundingClientRect();
     let sectionHeroSize = sectionRect.height;
     console.log(`section size is ${sectionHeroSize}`);
 };
 window.addEventListener('resize', logSectionSize); //event listener for logSectionSize on resize of the screen
-
-
 
 mm.add(
     {
@@ -388,14 +387,17 @@ mm.add(
                
         }
     }
-);
+);  
 
 
-// document.addEventListener('visibilitychange', () => {
-//     if (document.visibilityState === 'visible') {
-//       ScrollTrigger.refresh();
-//     }
-//   });
+const ll = gsap.timeline({
+    scrollTrigger: {
+       trigger: ".section_home-about",
+        start: "60% top",
+        once: true,
+    }
+})
 
-
-    
+ll.to(line[0],{
+opacity: 1,
+})

@@ -22,21 +22,24 @@ for (k=0; k<dash.length; k++){
     // console.log(dashLength[2]);
 
 const line = []; //lines declaration
-    for (l=1; l<=5; l++){
+    for (l=1; l<=6; l++){
     line.push(document.querySelector(`.line-0${l}`));
     }
 
+
+// declaration for hero section
 const planeWrap = document.querySelector(".plane-wrap");
 const planeItem = document.querySelector(".plane-item");
 const embed = document.querySelector(".decoration_embed");
 const phone = document.querySelector(".home_hero_item-right");
 const leftContent = document.querySelector(".home_hero_item-left");
-const embedWrap = document.querySelector('decoration-embed_wrap');
+const embedWrap = document.querySelector('.decoration-embed_wrap');
 const homeWrap = document.querySelector('.home_hero_wrapper');
 const sectionHero = document.querySelector(".section_home-hero");
 
-embed.style.visibility = "visible";
 
+
+embed.style.visibility = "visible";
 const tl = gsap.timeline({ //declaration of tl gsap animation timeline
     scrollTrigger: {
         trigger:".decoration-wrap",
@@ -390,14 +393,92 @@ mm.add(
 );  
 
 
-const ll = gsap.timeline({
-    scrollTrigger: {
-       trigger: ".section_home-about",
-        start: "60% top",
-        once: true,
-    }
-})
 
-ll.to(line[0],{
-opacity: 1,
-})
+
+// window.addEventListener('DOMContentLoaded', () => { //bad abimation for about section
+//  //declaration for about section embed elements
+// const planeAbout = document.querySelector(".plane-about");
+// const planeWrapAbout = document.querySelector(".plane-wrap-about");
+// const carAbout = document.querySelectorAll(".car-about");
+// const bikeAbout = document.querySelectorAll(".bike-about");
+// const shipAbout = document.querySelectorAll(".ship-about");
+// const travelerAbout = document.querySelectorAll(".traveler-about");
+// console.log(line[1]);
+// const ll = gsap.timeline({
+//     scrollTrigger: {
+//        trigger: ".section_home-about",
+//         start: "60% top",
+//         once: true,
+//     }
+// });
+
+// ll.to(line[0], {
+//   opacity: 1,
+//   duration: 0.4,
+//   ease: "power2.Out",
+// });
+// ll.to(planeWrapAbout, {
+//   opacity: 1,
+//   duration: 0.3,
+//   ease: "power2.Out",
+// }, "-=0.2"); // Starts a little earlier, overlapping with previous animation
+
+// ll.to(planeAbout, {
+//   opacity: 1,
+//   duration: 0.3,
+//   ease: "power2.Out",
+// }, "<");
+
+// // Add stagger effect for lines
+// ll.to(line[1], {
+//   opacity: 1,
+//   duration: 0.3,
+//   ease: "power2.Out",
+// });
+// ll.to(carAbout, {
+//   opacity: 1,
+//   duration: 0.3,
+//   ease: "power2.Out",
+// }, "-=0.2"); // Staggered overlap
+
+// // Repeat for remaining items with stagger
+// ll.to(line[2], {
+//   opacity: 1,
+//   duration: 0.3,
+//   ease: "power2.Out",
+// });
+// ll.to(bikeAbout, {
+//   opacity: 1,
+//   duration: 0.3,
+//   ease: "power2.Out",
+// }, "-=0.2");
+
+// ll.to(line[3], {
+//   opacity: 1,
+//   duration: 0.3,
+//   ease: "power2.Out",
+// });
+// ll.to(shipAbout, {
+//   opacity: 1,
+//   duration: 0.3,
+//   ease: "power2.Out",
+// }, "-=0.2");
+
+// ll.to(line[4], {
+//   opacity: 1,
+//   duration: 0.3,
+//   ease: "power2.Out",
+// });
+// ll.to(travelerAbout, {
+//   opacity: 1,
+//   duration: 0.3,
+//   ease: "power2.Out",
+// }, "-=0.2");
+
+// // Finally, animate the last line with slight delay for a smooth ending
+// ll.to(line[5], {
+//   opacity: 1,
+//   duration: 0.3,
+//   ease: "power2.Out",
+//   })
+// });

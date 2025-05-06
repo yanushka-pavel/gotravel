@@ -38,6 +38,12 @@ const homeWrap = document.querySelector('.home_hero_wrapper');
 const sectionHero = document.querySelector(".section_home-hero");
 
 
+//declaration for faq section
+const faqItem = [];
+for (f=1; f<=5; f++) {
+  faqItem.push(document.querySelector(`.accordion_item.is-${f}`))
+}
+
 
 embed.style.visibility = "visible";
 const tl = gsap.timeline({ //declaration of tl gsap animation timeline
@@ -392,8 +398,33 @@ mm.add(
     }
 );  
 
+//logic for faq section
+let previousImage = document.querySelector(".accordion-image.is-1");
+let currentImage = null;
+// const firstImage = document.querySelector(".accordion-image.is-1");
+const buttons = document.querySelectorAll(".accordion-button");
+
+//function for faq
+function faqClick (){
+  
+}
+
+//buttons click logic
+buttons.forEach((btn) => {
+btn.addEventListener('click', () => {
+  const buttonAttribute = btn.getAttribute("data-attribute");
+  currentImage = document.querySelector(`.accordion-image.is-${buttonAttribute}`);
+if (currentImage !== previousImage) {
+faqClick ();
+}
 
 
+
+
+}
+)
+
+})
 
 // window.addEventListener('DOMContentLoaded', () => { //bad abimation for about section
 //  //declaration for about section embed elements

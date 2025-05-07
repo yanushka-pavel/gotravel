@@ -406,8 +406,31 @@ const buttons = document.querySelectorAll(".accordion-button");
 
 //function for faq
 function faqClick (){
-  
-}
+  console.log("function works");
+  const fq = gsap.timeline();
+   fq.set(currentImage, {
+    x: "+120%",
+    zIndex: 4,
+   })
+   fq.to(previousImage, {
+    x: "-120%",
+    scaleX: 1.2,
+    duration: 1.2,
+    ease: "power3.inOut",
+   });
+   fq.to(currentImage, {
+    x: "0%",
+    duration: 1.2,
+    ease: "power3.inOut",
+   },"<")
+  //  fq.fromTo(previousImage, {
+  //   filter: "brightness(1)",
+  //  },{
+  //   filter: "brightness(0.5)",
+  //   ease: "power2.inOut",
+  //  },"-=1")
+   
+};
 
 //buttons click logic
 buttons.forEach((btn) => {
@@ -416,6 +439,7 @@ btn.addEventListener('click', () => {
   currentImage = document.querySelector(`.accordion-image.is-${buttonAttribute}`);
 if (currentImage !== previousImage) {
 faqClick ();
+previousImage = currentImage;
 }
 
 

@@ -400,48 +400,80 @@ mm.add(
 
 //logic for faq section
 let previousImage = document.querySelector(".accordion-image.is-1");
-const faqImages = document.querySelectorAll(".accordion-image");
 let nextImage = null;
+let accordionItemBottom = null;
+const faqImages = document.querySelectorAll(".accordion-image");
 const buttons = document.querySelectorAll(".accordion-button");
 
 faqImages.forEach(image => {
-image.style.visibility = 'hidden';
+  image.style.visibility = 'hidden';
 })
 previousImage.style.visibility = 'visible';
+console.log("Initial previous image is ",previousImage);
+console.log("Initial next image is",nextImage);
 
-//function for faq
+//function for faq open
 function faqClick (){
   console.log("function works");
   const fq = gsap.timeline( {defaults: {duration:1.2, ease: "power2.inOut"}});
-previousImage.style.visibility = 'visible';
-nextImage.style.visibility = 'visible';
-previousImage.style.zIndex = '2';
-nextImage.style.zIndex = '1';
-fq.fromTo(previousImage, 
+    previousImage.style.visibility = 'visible';
+    nextImage.style.visibility = 'visible';
+    previousImage.style.zIndex = '2';
+    nextImage.style.zIndex = '1';
+  fq.fromTo(previousImage, 
+    
+      { clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, -30% 100%)" },
+      { clipPath: "polygon(100% 0%, 100% 0%, 100% 100%, 100% 100%)", 
   
-    { clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, -30% 100%)" },
-    { clipPath: "polygon(100% 0%, 100% 0%, 100% 100%, 100% 100%)", 
- 
-  onComplete: () => {
-    previousImage.style.visibility = 'hidden';
-    previousImage = nextImage;
+    onComplete: () => {
+      // previousImage.style.visibility = 'hidden';
+      previousImage = nextImage;
+    }
+  });
+
+  function paragraphReveal () { //function for paragraph reveal and class adding
+    fq.to(accordionItemBottom,{
+      height: accordionItemBottom.scrollHeight + "px", //scrollHeight counts the pixel height of the element
+        onComplete: () => {
+          if(accordionItemBottom.classList.contains("opened")){
+            accordionItemBottom.classList.remove("opened");
+          }
+          else accordionItemBottom.classList.add("opened");
+    
+        }
+      },
+      "-=1");
+      console.log("The paragraph revealed")
   }
-});
+  paragraphReveal ();
+  };
 
-
+//function for faq close
+function faqClickClose () {
+  gsap.to(accordionItemBottom, {
+    height: "0px",
+  });
+  accordionItemBottom.classList.remove("opened");
 };
 
 //buttons click logic
 buttons.forEach((btn) => {
-btn.addEventListener('click', () => {
-  const buttonAttribute = btn.getAttribute("data-attribute");
-  nextImage = document.querySelector(`.accordion-image.is-${buttonAttribute}`);
-if (nextImage !== previousImage) {
-faqClick ();
-};
+  btn.addEventListener('click', () => {
+    const buttonAttribute = btn.getAttribute("data-attribute");
+    nextImage = document.querySelector(`.accordion-image.is-${buttonAttribute}`);
+    accordionItemBottom = document.querySelector(`.accordion_item.is-${buttonAttribute} .accordion_bottom`)
 
-//problem with updating previousimage or nextimage
-
+    if (nextImage !== previousImage && !accordionItemBottom.classList.contains("opened")) {
+      gsap.set(nextImage, {clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)"}) //images to normal state;
+      faqClick ();
+    };
+    if (faqClick && accordionItemBottom.classList.contains("opened")) {
+      faqClickClose ();
+    }
+    if (nextImage == previousImage) {
+      paragraphReveal ();
+    }
+    
 
 }
 )

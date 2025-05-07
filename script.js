@@ -400,49 +400,47 @@ mm.add(
 
 //logic for faq section
 let previousImage = document.querySelector(".accordion-image.is-1");
-let currentImage = null;
-// const firstImage = document.querySelector(".accordion-image.is-1");
+const faqImages = document.querySelectorAll(".accordion-image");
+let nextImage = null;
 const buttons = document.querySelectorAll(".accordion-button");
+
+faqImages.forEach(image => {
+image.style.visibility = 'hidden';
+})
+previousImage.style.visibility = 'visible';
 
 //function for faq
 function faqClick (){
   console.log("function works");
-  const fq = gsap.timeline();
-   fq.set(currentImage, {
-    x: "+120%",
-    zIndex: 4,
-   })
-   fq.to(previousImage, {
-    x: "-120%",
-    scaleX: 1.2,
-    duration: 1.2,
-    ease: "power3.inOut",
-   });
-   fq.to(currentImage, {
-    x: "0%",
-    duration: 1.2,
-    ease: "power3.inOut",
-   },"<")
-  //  fq.fromTo(previousImage, {
-  //   filter: "brightness(1)",
-  //  },{
-  //   filter: "brightness(0.5)",
-  //   ease: "power2.inOut",
-  //  },"-=1")
-   
+  const fq = gsap.timeline( {defaults: {duration:1.2, ease: "power2.inOut"}});
+previousImage.style.visibility = 'visible';
+nextImage.style.visibility = 'visible';
+previousImage.style.zIndex = '2';
+nextImage.style.zIndex = '1';
+fq.fromTo(previousImage, 
+  
+    { clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, -30% 100%)" },
+    { clipPath: "polygon(100% 0%, 100% 0%, 100% 100%, 100% 100%)", 
+ 
+  onComplete: () => {
+    previousImage.style.visibility = 'hidden';
+    previousImage = nextImage;
+  }
+});
+
+
 };
 
 //buttons click logic
 buttons.forEach((btn) => {
 btn.addEventListener('click', () => {
   const buttonAttribute = btn.getAttribute("data-attribute");
-  currentImage = document.querySelector(`.accordion-image.is-${buttonAttribute}`);
-if (currentImage !== previousImage) {
+  nextImage = document.querySelector(`.accordion-image.is-${buttonAttribute}`);
+if (nextImage !== previousImage) {
 faqClick ();
-previousImage = currentImage;
-}
+};
 
-
+//problem with updating previousimage or nextimage
 
 
 }

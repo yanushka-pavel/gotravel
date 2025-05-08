@@ -408,14 +408,32 @@ const buttons = document.querySelectorAll(".accordion-button");
 faqImages.forEach(image => {
   image.style.visibility = 'hidden';
 })
+
 previousImage.style.visibility = 'visible';
 console.log("Initial previous image is ",previousImage);
 console.log("Initial next image is",nextImage);
+const fq = gsap.timeline( {defaults: {duration:1.2, ease: "power2.inOut"}});
 
+
+
+function paragraphReveal (timeline) { //function for paragraph reveal and class adding
+  timeline.to(accordionItemBottom,{
+    height: accordionItemBottom.scrollHeight + "px", //scrollHeight counts the pixel height of the element
+      onComplete: () => {
+        if(accordionItemBottom.classList.contains("opened")){
+          accordionItemBottom.classList.remove("opened");
+        }
+        else accordionItemBottom.classList.add("opened");
+  
+      }
+    },
+    "-=1");
+    console.log("The paragraph revealed")
+}
 //function for faq open
 function faqClick (){
   console.log("function works");
-  const fq = gsap.timeline( {defaults: {duration:1.2, ease: "power2.inOut"}});
+  
     previousImage.style.visibility = 'visible';
     nextImage.style.visibility = 'visible';
     previousImage.style.zIndex = '2';
@@ -431,21 +449,8 @@ function faqClick (){
     }
   });
 
-  function paragraphReveal () { //function for paragraph reveal and class adding
-    fq.to(accordionItemBottom,{
-      height: accordionItemBottom.scrollHeight + "px", //scrollHeight counts the pixel height of the element
-        onComplete: () => {
-          if(accordionItemBottom.classList.contains("opened")){
-            accordionItemBottom.classList.remove("opened");
-          }
-          else accordionItemBottom.classList.add("opened");
-    
-        }
-      },
-      "-=1");
-      console.log("The paragraph revealed")
-  }
-  paragraphReveal ();
+ 
+  paragraphReveal (fq);
   };
 
 //function for faq close
@@ -454,6 +459,7 @@ function faqClickClose () {
     height: "0px",
   });
   accordionItemBottom.classList.remove("opened");
+  console.log("The paragraph is closed");
 };
 
 //buttons click logic
@@ -467,11 +473,12 @@ buttons.forEach((btn) => {
       gsap.set(nextImage, {clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)"}) //images to normal state;
       faqClick ();
     };
-    if (faqClick && accordionItemBottom.classList.contains("opened")) {
+    if (accordionItemBottom.classList.contains("opened")) {
       faqClickClose ();
     }
-    if (nextImage == previousImage) {
-      paragraphReveal ();
+    if (nextImage == previousImage && !accordionItemBottom.classList.contains("opened")) {
+      paragraphReveal (fq);
+      console.log("nextimage = previousimage")
     }
     
 

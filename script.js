@@ -418,15 +418,17 @@ previousImage.style.visibility = 'visible';
 console.log("Initial previous image is ",previousImage);
 console.log("Initial next image is",nextImage);
 const fq = gsap.timeline( {defaults: {duration:1, ease: "power3.inOut"}, //main fq timeline declaration
-onComplete: () => {
-  isAnimating = false;
-}},
+// onComplete: () => {
+//   isAnimating = false;
+// }
+},
 );
 
 const fqc = gsap.timeline({defaults: {duration: 0.6, ease: "power2.inOut"},
-  onComplete: () => {
-    isAnimating = false;
-  }},); // fqc timeline for faq circle animation
+  // onComplete: () => {
+  //   isAnimating = false;
+  // }
+},); // fqc timeline for faq circle animation
 
 
 //function for paragraph reveal
@@ -465,7 +467,8 @@ circle.dataset.length = length;
 
 //gsap minus animation for circles and lines
 function faqCircleOpen (timeline, line, circle) { // faqcircle animation
-  const length = circle.dataset.length;
+console.log("Open circle animation");
+const length = circle.dataset.length;
 timeline.to(line, {
   rotate: 90,
   transformOrigin: "center",
@@ -475,12 +478,13 @@ strokeDashoffset: 0,
 }, "<")
 timeline.to(circle, {
  opacity: 0,
- duration: 2,
+ duration: 0.4,
   }); 
 };
 
 //gsap plus animation for circles and lines
 function faqCircleClose (timeline, line, circle){
+  console.log("Close circle animation");
 const length = circle.dataset.length;
 timeline.set(circle,
 {
@@ -497,6 +501,7 @@ ease: "power3.inOut",
 };
 //gsap image animation brightness + clippath
 function faqImageAnimation (){ 
+  console.log("Image is animatng");
   gsap.set(nextImage, {clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)"}) //images to normal state;
   fq.fromTo(previousImage, 
       { clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)" },
@@ -510,33 +515,51 @@ function faqImageAnimation (){
 
 //main logic for faq animation
 function faqClick (faqLine, faqCircle){ //faqclick animation
+  if (isAnimating) return; //only one animation at a time
+  isAnimating = true;
+
   console.log("function works");
     previousImage.style.visibility = 'visible';
     nextImage.style.visibility = 'visible';
     previousImage.style.zIndex = '2';
     nextImage.style.zIndex = '1';
- if (isAnimating) return; //only one animation at a time
-  isAnimating = true;
-    if (nextImage !== previousImage && !accordionItemBottom.classList.contains("opened")) {
-      faqCircleOpen (fqc, faqLine, faqCircle);
-      faqImageAnimation ();
-      console.log("basic clippath animation");
+
+  const master = gsap.timeline({
+    onComplete: () => {
+      isAnimating = false;
+    }
+  })
+fq.clear();
+fqc.clear();
  
+  if (nextImage !== previousImage && !accordionItemBottom.classList.contains("opened")) {
+    master.add('start')
+    .add(fq, 'start')
+    .add(fqc, 'start');
+
+    faqCircleOpen (fqc, faqLine, faqCircle);
+    faqImageAnimation ();
+    console.log("basic clippath animation");
+
   previousImage = nextImage;
   gsap.set(previousImage, {
     filter: "brightness(100%)"
   })
   paragraphReveal (fq, true); //true for delayAnimation = "<"
-  
-
     }
 
     else if (accordionItemBottom.classList.contains("opened")) {
+      master.add('start')
+      .add(fq, 'start')
+      .add(fqc, 'start');
   faqClickClose (fq);
   faqCircleClose (fqc, faqLine, faqCircle);
     }
 
     else if (nextImage == previousImage && !accordionItemBottom.classList.contains("opened")) {
+      master.add('start')
+      .add(fq, 'start')
+      .add(fqc, 'start');
       faqCircleOpen (fqc, faqLine, faqCircle);
       console.log("nextimage = previousimage")
         paragraphReveal (fq, false); //false to not add any timeline delay (because there are no elements before)
@@ -562,6 +585,39 @@ buttons.forEach((btn) => {
 
 })
 
+
+
+//test timeline
+const firstitem = document.querySelector(".first-item");
+const secondItem = document.querySelector(".second-item");
+const tl01 = gsap.timeline({defaults: {duration: 0.6, ease: "power2.inOut"}});
+const tl02 = gsap.timeline({defaults: {duration: 0.6, ease: "power2.inOut"}});
+
+function first (tl){
+  tl.to(firstitem, {
+    x: 100,
+  });
+  tl.to(firstitem, {
+    x: 50,
+  })
+}
+
+function second (tl){
+  tl.to(secondItem, {
+    x: 100,
+  });
+  tl.to(secondItem, {
+    x: 50,
+  })
+}
+
+
+const testSection = document.querySelector(".section-test");
+testSection.addEventListener('click', ()=> {
+
+first(tl01);
+second(tl02);
+});
 // window.addEventListener('DOMContentLoaded', () => { //bad abimation for about section
 //  //declaration for about section embed elements
 // const planeAbout = document.querySelector(".plane-about");

@@ -398,12 +398,17 @@ mm.add(
     }
 );  
 
+
+
+
 //logic for faq section
 let previousImage = document.querySelector(".accordion-image.is-1");
 let nextImage = null;
 let accordionItemBottom = null;
+let isAnimating = false;
 const faqImages = document.querySelectorAll(".accordion-image");
 const buttons = document.querySelectorAll(".accordion-button");
+
 
 faqImages.forEach(image => {
   image.style.visibility = 'hidden';
@@ -412,55 +417,133 @@ faqImages.forEach(image => {
 previousImage.style.visibility = 'visible';
 console.log("Initial previous image is ",previousImage);
 console.log("Initial next image is",nextImage);
-const fq = gsap.timeline( {defaults: {duration:1.2, ease: "power2.inOut"}});
+const fq = gsap.timeline( {defaults: {duration:1, ease: "power3.inOut"}, //main fq timeline declaration
+onComplete: () => {
+  isAnimating = false;
+}},
+);
+
+const fqc = gsap.timeline({defaults: {duration: 0.6, ease: "power2.inOut"},
+  onComplete: () => {
+    isAnimating = false;
+  }},); // fqc timeline for faq circle animation
 
 
-
-function paragraphReveal (timeline) { //function for paragraph reveal and class adding
-  timeline.to(accordionItemBottom,{
+//function for paragraph reveal
+function paragraphReveal (timeline, useDelay) { //function for paragraph reveal and class adding
+  let delayAnimation = null;
+  if (useDelay) { //checking usedelay attribute to assign a value to variable
+    delayAnimation = "<";
+  }
+  console.log("The paragraph revealed")
+  timeline.to(accordionItemBottom, {
     height: accordionItemBottom.scrollHeight + "px", //scrollHeight counts the pixel height of the element
-      onComplete: () => {
-        if(accordionItemBottom.classList.contains("opened")){
-          accordionItemBottom.classList.remove("opened");
-        }
-        else accordionItemBottom.classList.add("opened");
-  
-      }
-    },
-    "-=1");
-    console.log("The paragraph revealed")
+    }, delayAnimation
+  );
+    accordionItemBottom.classList.add("opened");
 }
-//function for faq open
-function faqClick (){
+
+//function for faq close
+function faqClickClose (timeline) { //faqclose animatio
+console.log("The paragraph is closed");
+  timeline.to(accordionItemBottom, {
+    height: "0px",
+  });
+  accordionItemBottom.classList.remove("opened");
+}; 
+
+//circle line animation
+const faqCircleElements = document.querySelectorAll(".faq-circle"); // dynamically counting circles length and hiding it
+faqCircleElements.forEach(circle => {
+const length = circle.getTotalLength();
+circle.style.strokeDasharray = length;
+circle.style.strokeDashoffset = length;
+circle.dataset.length = length;
+}
+);
+
+
+//gsap minus animation for circles and lines
+function faqCircleOpen (timeline, line, circle) { // faqcircle animation
+  const length = circle.dataset.length;
+timeline.to(line, {
+  rotate: 90,
+  transformOrigin: "center",
+});
+timeline.to(circle, {
+strokeDashoffset: 0,
+}, "<")
+timeline.to(circle, {
+ opacity: 0,
+ duration: 2,
+  }); 
+};
+
+//gsap plus animation for circles and lines
+function faqCircleClose (timeline, line, circle){
+const length = circle.dataset.length;
+timeline.set(circle,
+{
+  opacity: 1,
+})
+timeline.to(line, {
+  rotate: 0,
+  transformOrigin: "center",
+},"<");
+timeline.to(circle,{
+  strokeDashoffset: length,
+ease: "power3.inOut",
+}, "<");
+};
+//gsap image animation brightness + clippath
+function faqImageAnimation (){ 
+  gsap.set(nextImage, {clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)"}) //images to normal state;
+  fq.fromTo(previousImage, 
+      { clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)" },
+      { clipPath: "polygon(0% 0%, 0% 0%, -1% 100%, 0% 100%)", 
+  });
+  fq.fromTo(previousImage,
+    {filter: "brightness(100%)"},
+    {filter: "brightness(20%)", delay: 0.1}, "<",
+  )
+}
+
+//main logic for faq animation
+function faqClick (faqLine, faqCircle){ //faqclick animation
   console.log("function works");
-  
     previousImage.style.visibility = 'visible';
     nextImage.style.visibility = 'visible';
     previousImage.style.zIndex = '2';
     nextImage.style.zIndex = '1';
-  fq.fromTo(previousImage, 
-    
-      { clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, -30% 100%)" },
-      { clipPath: "polygon(100% 0%, 100% 0%, 100% 100%, 100% 100%)", 
-  
-    onComplete: () => {
-      // previousImage.style.visibility = 'hidden';
-      previousImage = nextImage;
-    }
-  });
-
+ if (isAnimating) return; //only one animation at a time
+  isAnimating = true;
+    if (nextImage !== previousImage && !accordionItemBottom.classList.contains("opened")) {
+      faqCircleOpen (fqc, faqLine, faqCircle);
+      faqImageAnimation ();
+      console.log("basic clippath animation");
  
-  paragraphReveal (fq);
-  };
+  previousImage = nextImage;
+  gsap.set(previousImage, {
+    filter: "brightness(100%)"
+  })
+  paragraphReveal (fq, true); //true for delayAnimation = "<"
+  
 
-//function for faq close
-function faqClickClose () {
-  gsap.to(accordionItemBottom, {
-    height: "0px",
-  });
-  accordionItemBottom.classList.remove("opened");
-  console.log("The paragraph is closed");
-};
+    }
+
+    else if (accordionItemBottom.classList.contains("opened")) {
+  faqClickClose (fq);
+  faqCircleClose (fqc, faqLine, faqCircle);
+    }
+
+    else if (nextImage == previousImage && !accordionItemBottom.classList.contains("opened")) {
+      faqCircleOpen (fqc, faqLine, faqCircle);
+      console.log("nextimage = previousimage")
+        paragraphReveal (fq, false); //false to not add any timeline delay (because there are no elements before)
+       
+    }
+
+  };
 
 //buttons click logic
 buttons.forEach((btn) => {
@@ -468,20 +551,12 @@ buttons.forEach((btn) => {
     const buttonAttribute = btn.getAttribute("data-attribute");
     nextImage = document.querySelector(`.accordion-image.is-${buttonAttribute}`);
     accordionItemBottom = document.querySelector(`.accordion_item.is-${buttonAttribute} .accordion_bottom`)
+    const faqLine = btn.querySelector(".faq-line-plus");
+    const faqCircle = btn.querySelector(".faq-circle");
+  
 
-    if (nextImage !== previousImage && !accordionItemBottom.classList.contains("opened")) {
-      gsap.set(nextImage, {clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)"}) //images to normal state;
-      faqClick ();
-    };
-    if (accordionItemBottom.classList.contains("opened")) {
-      faqClickClose ();
-    }
-    if (nextImage == previousImage && !accordionItemBottom.classList.contains("opened")) {
-      paragraphReveal (fq);
-      console.log("nextimage = previousimage")
-    }
-    
-
+  
+    faqClick (faqLine, faqCircle);
 }
 )
 

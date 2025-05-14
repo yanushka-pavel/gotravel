@@ -612,12 +612,20 @@ function second (tl){
 }
 
 
-const testSection = document.querySelector(".section-test");
-testSection.addEventListener('click', ()=> {
-
-first(tl01);
-second(tl02);
+//code for smooth scroll animation
+const lenis = new Lenis({
+  duration: 1.2,
+  easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // easing function
+  smooth: true,
 });
+
+function raf(time) {
+  lenis.raf(time);
+  requestAnimationFrame(raf);
+}
+
+requestAnimationFrame(raf);
+
 // window.addEventListener('DOMContentLoaded', () => { //bad abimation for about section
 //  //declaration for about section embed elements
 // const planeAbout = document.querySelector(".plane-about");

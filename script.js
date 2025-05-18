@@ -1,4 +1,6 @@
 const page = document.body.dataset.page
+
+//code for the book page
 if (page === "book"){
   console.log("test")
   //logic for nav menu
@@ -43,7 +45,80 @@ if (page === "book"){
   link.addEventListener('click',closeNavClose);
   });
   
+
+// Animate the progress bar fill based on scroll
+const circles = document.querySelectorAll(".progress-circle");
+function stepsCircles(index) { //circles filling animation
+  gsap.to(circles[index], {
+    fill: "#4D6F4A",
+    duration: 0.3
+  });
 };
+const tabCard = document.querySelector(".tab-card");
+const tabWrap =document.querySelectorAll(".tab-wrap");
+
+function tabChange(prevIndex, nextIndex){ //function for tab change
+tabWrap[prevIndex].classList.remove("is-active");
+tabWrap[nextIndex].classList.add("is-active");
+gsap.fromTo(tabWrap[nextIndex],  {
+  y:20,
+  opacity:0,
+},
+{
+  y:0,
+  opacity:1,
+  ease: "power2.inOut",
+})
+};//end of the function
+
+
+let reachedHalf = false;
+let reachedEnd = false;
+
+const progressTL = gsap.timeline({
+  scrollTrigger: {
+    trigger: ".book-steps_tracker",
+    start: "top top",
+    end: "bottom bottom+=40%",
+    scrub: true,
+    onUpdate: (self) => {
+      const progress = self.progress;
+
+      if (progress >= 0.5 && !reachedHalf) {
+        reachedHalf = true;
+        stepsCircles(1); // center
+        tabChange(0,1);
+      }
+
+      if (progress >= 1 && !reachedEnd) {
+        reachedEnd = true;
+        stepsCircles(2); // bottom
+        tabChange(1,2);
+      }
+
+      // Reset if scrolling up
+      if (progress < 0.5 && reachedHalf) {
+        reachedHalf = false;
+        gsap.to(circles[1], { fill: "#D3E1D1", duration: 0.3 });
+        tabChange(1,0);
+      }
+      if (progress < 1 && reachedEnd) {
+        reachedEnd = false;
+        gsap.to(circles[2], { fill: "#D3E1D1", duration: 0.3 });
+        tabChange(2,1);
+      }
+    }
+  }
+});
+
+progressTL.to(".progress-fill", { //line animation
+  height: "100%",
+  ease: "none"
+});
+
+}
+
+//code for the home page
 if (page === "home"){
 
   const circle= []; // assigning circles classes to an array

@@ -612,104 +612,64 @@ function second (tl){
 }
 
 
-//code for smooth scroll animation
-const lenis = new Lenis({
-  duration: 1.2,
-  easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // easing function
-  smooth: true,
-});
 
-function raf(time) {
-  lenis.raf(time);
-  requestAnimationFrame(raf);
+//logic for nav menu
+const menuButton = document.querySelector(".menu-button")
+const menuButtonClose = document.querySelector(".close-wrapper")
+const closeLinksWrap = document.querySelector(".close-nav-links");
+const closeLinks = closeLinksWrap.querySelectorAll(".heading");
+const clnav = gsap.timeline({defaults: {duration: 1}});
+function closeNavOpen (){
+    clnav.fromTo(closeLinks, {
+      opacity: 0,
+      x:50,
+      ease: "power1.inOut",
+    },
+    {
+      opacity: 1,
+      x: 0,
+      ease: "power1.inOut",
+      stagger: 0.1
+    }
+    )
+    }
+function closeNavClose () {
+  clnav.fromTo(closeLinks, {
+    opacity: 1,
+    x:0,
+    ease: "power1.inOut",
+  },
+  {
+    opacity: 0,
+    x: 100,
+    ease: "power1.inOut",
+    stagger: 0.1,
+    duration: 0.5,
+  }
+  )
 }
 
-requestAnimationFrame(raf);
+menuButton.addEventListener('click', closeNavOpen); //menu button click open
+menuButtonClose.addEventListener('click', closeNavClose); // menu button click close
+closeLinks.forEach(link => {
+link.addEventListener('click',closeNavClose);
+});
 
-// window.addEventListener('DOMContentLoaded', () => { //bad abimation for about section
-//  //declaration for about section embed elements
-// const planeAbout = document.querySelector(".plane-about");
-// const planeWrapAbout = document.querySelector(".plane-wrap-about");
-// const carAbout = document.querySelectorAll(".car-about");
-// const bikeAbout = document.querySelectorAll(".bike-about");
-// const shipAbout = document.querySelectorAll(".ship-about");
-// const travelerAbout = document.querySelectorAll(".traveler-about");
-// console.log(line[1]);
-// const ll = gsap.timeline({
-//     scrollTrigger: {
-//        trigger: ".section_home-about",
-//         start: "60% top",
-//         once: true,
-//     }
+
+
+
+
+
+// //code for smooth scroll animation
+// const lenis = new Lenis({
+//   duration: 1.2,
+//   easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // easing function
+//   smooth: true,
 // });
 
-// ll.to(line[0], {
-//   opacity: 1,
-//   duration: 0.4,
-//   ease: "power2.Out",
-// });
-// ll.to(planeWrapAbout, {
-//   opacity: 1,
-//   duration: 0.3,
-//   ease: "power2.Out",
-// }, "-=0.2"); // Starts a little earlier, overlapping with previous animation
+// function raf(time) {
+//   lenis.raf(time);
+//   requestAnimationFrame(raf);
+// }
 
-// ll.to(planeAbout, {
-//   opacity: 1,
-//   duration: 0.3,
-//   ease: "power2.Out",
-// }, "<");
-
-// // Add stagger effect for lines
-// ll.to(line[1], {
-//   opacity: 1,
-//   duration: 0.3,
-//   ease: "power2.Out",
-// });
-// ll.to(carAbout, {
-//   opacity: 1,
-//   duration: 0.3,
-//   ease: "power2.Out",
-// }, "-=0.2"); // Staggered overlap
-
-// // Repeat for remaining items with stagger
-// ll.to(line[2], {
-//   opacity: 1,
-//   duration: 0.3,
-//   ease: "power2.Out",
-// });
-// ll.to(bikeAbout, {
-//   opacity: 1,
-//   duration: 0.3,
-//   ease: "power2.Out",
-// }, "-=0.2");
-
-// ll.to(line[3], {
-//   opacity: 1,
-//   duration: 0.3,
-//   ease: "power2.Out",
-// });
-// ll.to(shipAbout, {
-//   opacity: 1,
-//   duration: 0.3,
-//   ease: "power2.Out",
-// }, "-=0.2");
-
-// ll.to(line[4], {
-//   opacity: 1,
-//   duration: 0.3,
-//   ease: "power2.Out",
-// });
-// ll.to(travelerAbout, {
-//   opacity: 1,
-//   duration: 0.3,
-//   ease: "power2.Out",
-// }, "-=0.2");
-
-// // Finally, animate the last line with slight delay for a smooth ending
-// ll.to(line[5], {
-//   opacity: 1,
-//   duration: 0.3,
-//   ease: "power2.Out",
-//   })
-// });
+// requestAnimationFrame(raf);

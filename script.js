@@ -9,7 +9,7 @@ if (page === "book"){
   const closeLinksWrap = document.querySelector(".close-nav-links");
   const closeLinks = closeLinksWrap.querySelectorAll(".heading");
   const clnav = gsap.timeline({defaults: {duration: 1}});
-  function closeNavOpen (){
+  function closeNavOpen (){ // logic for opening nav menu
       clnav.fromTo(closeLinks, {
         opacity: 0,
         x:50,
@@ -23,7 +23,7 @@ if (page === "book"){
       }
       )
       }
-  function closeNavClose () {
+  function closeNavClose () { // logic for closing nav menu
     clnav.fromTo(closeLinks, {
       opacity: 1,
       x:0,
@@ -54,8 +54,8 @@ function stepsCircles(index) { //circles filling animation
     duration: 0.3
   });
 };
-const tabCard = document.querySelector(".tab-card");
-const tabWrap =document.querySelectorAll(".tab-wrap");
+
+const tabWrap =document.querySelectorAll(".tab-wrap"); // selecting each tab 
 
 function tabChange(prevIndex, nextIndex){ //function for tab change
 tabWrap[prevIndex].classList.remove("is-active");
@@ -75,14 +75,14 @@ gsap.fromTo(tabWrap[nextIndex],  {
 let reachedHalf = false;
 let reachedEnd = false;
 
-const progressTL = gsap.timeline({
+const progressTL = gsap.timeline({ // declaration of progress timeline for tabs
   scrollTrigger: {
     trigger: ".book-steps_tracker",
     start: "top top",
     end: "bottom bottom+=40%",
     scrub: true,
-    onUpdate: (self) => {
-      const progress = self.progress;
+    onUpdate: (self) => { // updating position of the scroll after each scroll
+      const progress = self.progress; // .progress - special property to track actual position
 
       if (progress >= 0.5 && !reachedHalf) {
         reachedHalf = true;
@@ -116,10 +116,17 @@ progressTL.to(".progress-fill", { //line animation
   ease: "none"
 });
 
-}
+gsap.to('.nav_component', {
+backgroundColor: "#e9f0e8",
+});
+
+};//end of the book page code
+//////////////////////////////////
+
 
 //code for the home page
 if (page === "home"){
+  console.log("Home page logged")
 
   const circle= []; // assigning circles classes to an array
   for (i=1; i<=6; i++) {
@@ -136,7 +143,7 @@ if (page === "home"){
   return document.querySelector(`.image-decoration.${imageClass}`)
   })
   
-  const dashLength = []; // loop for assigning dash length to the new array
+  const dashLength = []; // loop for assigning dash length fpr new array
   for (k=0; k<dash.length; k++){
      let dashValue = dash[k].getTotalLength();
      dashLength.push(dashValue);
@@ -171,13 +178,13 @@ if (page === "home"){
   const tl = gsap.timeline({ //declaration of tl gsap animation timeline
       scrollTrigger: {
           trigger:".decoration-wrap",
-          start: "top 50%", // When the top of the section reaches 50% of the viewport
-          once: true, // Makes the animation smooth and tied to scroll position
+          start: "top 50%", // when the top of the section reaches 50% of the viewport
+          once: true, // makes the animation smooth and tied to scroll position
           toggleActions: "play none none none", // this tells it to play once
       }
   });
   
-  window.onload = function (){ // elements animation
+  window.onload = function (){ // hero route animation
   setTimeout(() => {
       
           tl.fromTo(image[0],
@@ -754,8 +761,8 @@ if (page === "home"){
   });
   
   
-}
-
+}; //end of the home page code
+//////////////////////////////////
 
 //logic for about section animation
 
@@ -793,18 +800,3 @@ if (page === "home"){
 //     ease: "power1.inOut",
 //   }, "<"
 // );
-
-
-// //code for smooth scroll animation
-// const lenis = new Lenis({
-//   duration: 1.2,
-//   easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // easing function
-//   smooth: true,
-// });
-
-// function raf(time) {
-//   lenis.raf(time);
-//   requestAnimationFrame(raf);
-// }
-
-// requestAnimationFrame(raf);

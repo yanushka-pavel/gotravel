@@ -1,4 +1,5 @@
-const page = document.body.dataset.page
+const page = document.body.dataset.page  //assingning to variable page current page data-attribute
+
 
 //code for the book page
 if (page === "book"){
@@ -82,7 +83,7 @@ const progressTL = gsap.timeline({ // declaration of progress timeline for tabs
     end: "bottom bottom+=40%",
     scrub: true,
     onUpdate: (self) => { // updating position of the scroll after each scroll
-      const progress = self.progress; // .progress - special property to track actual position
+      const progress = self.progress; // .progress - special property to track actual
 
       if (progress >= 0.5 && !reachedHalf) {
         reachedHalf = true;
@@ -118,6 +119,29 @@ progressTL.to(".progress-fill", { //line animation
 
 gsap.to('.nav_component', {
 backgroundColor: "#e9f0e8",
+});
+
+
+//code for types of books section
+const bookTypeOpen = document.querySelectorAll(".button.book-type");
+const bookTypeTimeline = gsap.timeline({defaults: {duration:0.5}}); //gsap timeline for book types animation
+console.log(bookTypeOpen);
+bookTypeOpen.forEach((button, index) => { //trackicng what button is clicked
+  button.addEventListener("click", ()=>{
+const buttonList = document.querySelector(`.type_item.is-${index+1} .back-content-list`); //selecting list with text for each book type connected to the button
+const buttonListText = buttonList.querySelectorAll(".body-text-l")
+console.log(buttonList);
+bookTypeTimeline.fromTo(buttonListText, { //stagger animation for list content inside each book type card
+  y:10,
+  opacity: 0,
+},{
+  y:0,
+  opacity: 1,
+  ease: "power1.inOut",
+  stagger: 0.1,
+}
+)
+  });
 });
 
 };//end of the book page code
@@ -764,8 +788,8 @@ if (page === "home"){
 }; //end of the home page code
 //////////////////////////////////
 
-//logic for about section animation
 
+//logic for about section animation
 // const aboutLineArr = [];
 // const aboutElementsArr = [document.querySelectorAll(".plane-about"), ".car-about", ".bike-about", ".ship-about", ".traveler-about"];
 

@@ -10,3 +10,7 @@
     transform: rotate(-90deg);
     transform-origin: center;
   }
+
+.close_button-wrap{
+    transform: translate(-50%, -50%);
+}

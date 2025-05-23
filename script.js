@@ -3,7 +3,7 @@ const page = document.body.dataset.page  //assingning to variable page current p
 
 //code for the book page
 if (page === "book"){
-  console.log("test")
+  // console.log("test")
   //logic for nav menu
   const menuButton = document.querySelector(".menu-button")
   const menuButtonClose = document.querySelector(".close-wrapper")
@@ -125,12 +125,12 @@ backgroundColor: "#e9f0e8",
 //code for types of books section
 const bookTypeOpen = document.querySelectorAll(".button.book-type");
 const bookTypeTimeline = gsap.timeline({defaults: {duration:0.5}}); //gsap timeline for book types animation
-console.log(bookTypeOpen);
+// console.log(bookTypeOpen);
 bookTypeOpen.forEach((button, index) => { //trackicng what button is clicked
   button.addEventListener("click", ()=>{
 const buttonList = document.querySelector(`.type_item.is-${index+1} .back-content-list`); //selecting list with text for each book type connected to the button
 const buttonListText = buttonList.querySelectorAll(".body-text-l")
-console.log(buttonList);
+// console.log(buttonList);
 bookTypeTimeline.fromTo(buttonListText, { //stagger animation for list content inside each book type card
   y:10,
   opacity: 0,
@@ -144,13 +144,17 @@ bookTypeTimeline.fromTo(buttonListText, { //stagger animation for list content i
   });
 });
 
+
+
+
+
 };//end of the book page code
 //////////////////////////////////
 
 
 //code for the home page
 if (page === "home"){
-  console.log("Home page logged")
+  // console.log("Home page logged")
 
   const circle= []; // assigning circles classes to an array
   for (i=1; i<=6; i++) {
@@ -371,7 +375,7 @@ if (page === "home"){
       
       const sectionRect = sectionHero.getBoundingClientRect();
       let sectionHeroSize = sectionRect.height;
-      console.log(`section size is ${sectionHeroSize}`);
+      // console.log(`section size is ${sectionHeroSize}`);
   };
   window.addEventListener('resize', logSectionSize); //event listener for logSectionSize on resize of the screen
   
@@ -568,8 +572,8 @@ if (page === "home"){
   })
   
   previousImage.style.visibility = 'visible';
-  console.log("Initial previous image is ",previousImage);
-  console.log("Initial next image is",nextImage);
+  // console.log("Initial previous image is ",previousImage);
+  // console.log("Initial next image is",nextImage);
   const fq = gsap.timeline( {defaults: {duration:1, ease: "power3.inOut"}, //main fq timeline declaration
   // onComplete: () => {
   //   isAnimating = false;
@@ -590,7 +594,7 @@ if (page === "home"){
     if (useDelay) { //checking usedelay attribute to assign a value to variable
       delayAnimation = "<";
     }
-    console.log("The paragraph revealed")
+    // console.log("The paragraph revealed")
     timeline.to(accordionItemBottom, {
       height: accordionItemBottom.scrollHeight + "px", //scrollHeight counts the pixel height of the element
       }, delayAnimation
@@ -600,7 +604,7 @@ if (page === "home"){
   
   //function for faq close
   function faqClickClose (timeline) { //faqclose animatio
-  console.log("The paragraph is closed");
+  // console.log("The paragraph is closed");
     timeline.to(accordionItemBottom, {
       height: "0px",
     });
@@ -620,7 +624,7 @@ if (page === "home"){
   
   //gsap minus animation for circles and lines
   function faqCircleOpen (timeline, line, circle) { // faqcircle animation
-  console.log("Open circle animation");
+  // console.log("Open circle animation");
   const length = circle.dataset.length;
   timeline.to(line, {
     rotate: 90,
@@ -637,7 +641,7 @@ if (page === "home"){
   
   //gsap plus animation for circles and lines
   function faqCircleClose (timeline, line, circle){
-    console.log("Close circle animation");
+    // console.log("Close circle animation");
   const length = circle.dataset.length;
   timeline.set(circle,
   {
@@ -654,7 +658,7 @@ if (page === "home"){
   };
   //gsap image animation brightness + clippath
   function faqImageAnimation (){ 
-    console.log("Image is animatng");
+    // console.log("Image is animatng");
     gsap.set(nextImage, {clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)"}) //images to normal state;
     fq.fromTo(previousImage, 
         { clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)" },
@@ -671,7 +675,7 @@ if (page === "home"){
     if (isAnimating) return; //only one animation at a time
     isAnimating = true;
   
-    console.log("function works");
+    // console.log("function works");
       previousImage.style.visibility = 'visible';
       nextImage.style.visibility = 'visible';
       previousImage.style.zIndex = '2';
@@ -692,7 +696,7 @@ if (page === "home"){
   
       faqCircleOpen (fqc, faqLine, faqCircle);
       faqImageAnimation ();
-      console.log("basic clippath animation");
+      // console.log("basic clippath animation");
   
     previousImage = nextImage;
     gsap.set(previousImage, {
@@ -714,7 +718,7 @@ if (page === "home"){
         .add(fq, 'start')
         .add(fqc, 'start');
         faqCircleOpen (fqc, faqLine, faqCircle);
-        console.log("nextimage = previousimage")
+        // console.log("nextimage = previousimage")
           paragraphReveal (fq, false); //false to not add any timeline delay (because there are no elements before)
          
       }
@@ -784,7 +788,164 @@ if (page === "home"){
   link.addEventListener('click',closeNavClose);
   });
   
+
+  //code for popup
+  const popupContainer = document.querySelector(".popup_container");//container with content
+  const closeButton = document.querySelector(".close_button-wrap");//button
+  const closeInfo = document.querySelector(".close_info");//button info "close"
+  const sectionPopup = document.querySelector(".section_popup");
+  const popupTrigger = document.querySelectorAll('[data-attribute="popup"]')
+  console.log(popupTrigger);
+  //for clarification popup
+  const clarification = document.querySelector(".clarification_wrap") // clarifiaction 
+  const clarificationTimeline = gsap.timeline();//gsap timeline
+  const clarLinkBack = document.querySelector(".clarification_link.is-back"); //back to form button
+  const clarLinkClose = document.querySelector(".clarification_link.is-close"); // still close the form
+
+  popupTrigger.forEach(trigger => {
+trigger.addEventListener("click", ()=> {
+    console.log("works")
+    popupMain();
+})
+  });
+
+//popup main code
+  function popupMain (){
+
+    sectionPopup.style.visibility = "visible";
+    const mouse = { x: 0, y: 0 }; //tracks mouse position
+    const buttonPos = { x: 0, y: 0 };  // Tracks closeButton
+    const infoPos = { x: 0, y: 0 };    // Tracks closeInfo
+    let isInside = false;
+    let animating = false;
+    let clarPlay = false;
+    
+    let animationLocked = false;
+    
+    popupContainer.addEventListener("mousemove", () => { // hide close button when inside container
+      isInside = true;
+      closeButton.style.visibility = "hidden";
+      closeInfo.style.visibility = "hidden";
+    });
+    
+    popupContainer.addEventListener("mouseleave", () => { //tracking when the mouse leaves container
+      isInside = false;
+    });
+    
+    sectionPopup.addEventListener("mousemove", (e) => {
+      if(animationLocked) return;
+      mouse.x = e.clientX; //current mouse x position
+      mouse.y = e.clientY; //current mouse y position
+    
+      if (!isInside) { //when cursor is outside the container
+        closeButton.style.visibility = "visible";
+        closeInfo.style.visibility = "visible";
+        document.body.style.cursor = "pointer"; // or sectionPopup.style.cursor
   
+        if (!animating) {
+          animating = true;
+          animate();
+        }
+    
+      } else {
+        closeButton.style.visibility = "hidden";
+        document.body.style.cursor = "default"; // or sectionPopup.style.cursor
+      }
+    });
+    sectionPopup.addEventListener("click", (e)=> {
+      if (!isInside && !clarPlay) {
+      
+         animationLocked = true;
+         clarAnimOpen();
+  
+         closeButton.style.visibility = "hidden";
+         closeInfo.style.visibility = "hidden";
+       
+      }
+    })
+  
+    clarLinkBack.addEventListener("click", (e)=>{//fix this part and minimise it using fucntions
+      e.stopPropagation(); //tracks only clicks on LinkBack not considering sectionPopup
+      animationLocked = false;
+      clarPlay = false;
+      clarAnimClose();
+    
+      
+      // resume animation if mouse is outside container
+      if (!isInside && !animating) {
+        animating = true;
+        animate()
+        closeButton.style.visibility = "visible";
+        closeInfo.style.visibility = "visible";
+      }
+       
+  
+     })
+    clarLinkClose.addEventListener("click", (e)=> {
+      e.stopPropagation();
+      popupBlocked = true;
+      console.log("u clicked link close")
+     
+  
+    })
+  
+  //functions for popup
+  function clarAnimOpen () { // animation for click outside the container
+
+    //need find a way to block it while its closed
+    clarPlay = true;
+    clarification.style.visibility = "visible";
+    clarificationTimeline.fromTo(clarification,{
+    scale: 0,
+    opacity: 0,
+    },{
+      scale:1,
+      opacity:1,
+      ease: "bounce.Out",
+  })
+  }
+  function clarAnimClose (){
+    clarPlay = false;
+    clarificationTimeline.fromTo(clarification,{
+    scale: 1,
+    opacity: 1,
+    },{
+      scale:0.2,
+      duration: 0.5,
+      opacity:0,
+      ease: "power1.inOut",
+  })
+  
+  
+  }
+  function animate() { // animation for cursor
+      const speed1 = 0.3;  // Button delay
+      const speed2 = 0.1; // Info delay (slower)
+    
+      buttonPos.x += (mouse.x - buttonPos.x) * speed1;
+      buttonPos.y += (mouse.y - buttonPos.y) * speed1;
+    
+      infoPos.x += (mouse.x - infoPos.x) * speed2;
+      infoPos.y += (mouse.y - infoPos.y) * speed2;
+    
+      closeButton.style.left = `${buttonPos.x}px`;
+      closeButton.style.top = `${buttonPos.y}px`;
+    
+      closeInfo.style.left = `${infoPos.x + 20}px`;
+      closeInfo.style.top = `${infoPos.y-20}px`;
+    
+      // Keep animating only while visible
+      if (!isInside) {
+        requestAnimationFrame(animate);
+      } else {
+        animating = false;
+      }
+    }
+  }
+
+  
+
+
 }; //end of the home page code
 //////////////////////////////////
 

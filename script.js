@@ -797,6 +797,7 @@ if (page === "home"){
   const closeInfo = document.querySelector(".close_info");//button info "close"
   const sectionPopup = document.querySelector(".section_popup");
   const popupTrigger = document.querySelectorAll('[data-attribute="popup"]')
+  const popupCloseTablet = document.querySelector('.popup-close-button');
   
   //for clarification popup
   const clarification = document.querySelector(".clarification_wrap") // clarifiaction 
@@ -810,10 +811,25 @@ if (page === "home"){
   const formInputs = popupContainer.querySelectorAll(".form-input");
   let mySplitText =new SplitText(popupTextElements, {type: "lines", aria: "hidden"});//gsap split text declaration with clue parameters
   let lines = mySplitText.lines; // assigning all lines to 1 variable
+
+//function to track size of the screen
+let changedSize = window.innerWidth;
+
+
+window.addEventListener("resize", ()=> {
+  changedSize = window.innerWidth;
+})
+
   //popup trigger
   popupTrigger.forEach(trigger => {
-trigger.addEventListener("click", popupMain)
+  if (isLargeScreen()) {
+    trigger.addEventListener("click", popupMain)
+  }
+else {
+  console.log("ur screen size is small")
+}
   });
+  
 
 //popup main code
 let isInside = true; // to track if mouse is inside the container
@@ -892,7 +908,7 @@ let animationLocked = false; //flag to lock mouse animtion while additional popu
     //return to form logic
     clarLinkBack.addEventListener("click", (e)=>{
       if (!clarOpen) return;
-      e.stopPropagation(); //tracks only clicks on LinkBack not considering sectionPopup
+      e.stopPropagation(); //tracks only clicks on linkBack not considering sectionPopup
       animationLocked = false;
       clarBackToForm();
     
@@ -907,9 +923,6 @@ let animationLocked = false; //flag to lock mouse animtion while additional popu
        
   
      })
-
-
-    
   
   //functions for popup
   function clarPopOpen () { // animation for click outside the container

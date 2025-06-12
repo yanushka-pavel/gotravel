@@ -812,24 +812,9 @@ if (page === "home"){
   let mySplitText =new SplitText(popupTextElements, {type: "lines", aria: "hidden"});//gsap split text declaration with clue parameters
   let lines = mySplitText.lines; // assigning all lines to 1 variable
 
-//function to track size of the screen
-let changedSize = window.innerWidth;
 
 
-window.addEventListener("resize", ()=> {
-  changedSize = window.innerWidth;
-})
-
-  //popup trigger
-  popupTrigger.forEach(trigger => {
-  if (isLargeScreen()) {
-    trigger.addEventListener("click", popupMain)
-  }
-else {
-  console.log("ur screen size is small")
-}
-  });
-  
+ 
 
 //popup main code
 let isInside = true; // to track if mouse is inside the container
@@ -837,6 +822,28 @@ let animating = false; //flag to check if the main animation in progress
 let clarOpen = false; // flag for additional popup play
 let animationLocked = false; //flag to lock mouse animtion while additional popup is opened
 
+ //popup trigger
+ popupTrigger.forEach(trigger => {
+  trigger.addEventListener("click", () => {
+    sectionPopup.style.visibility = "visible";
+    let isLargeScreen = window.innerWidth > 991;
+    let isTouch = window.matchMedia("(pointer: fine)").matches;
+
+    if (isLargeScreen && isTouch) {
+      popupMain(); // Run animation
+    } else {
+      console.log("Too small or no mouse — skip animation");
+      popupGsapOpen()
+      popupCloseTablet.addEventListener("click", (e)=>{
+        console.log("You clicked close for Tablets")
+        e.stopPropagation();
+        deactivatePopup();
+        
+      }, {once: true})
+    }
+  });
+});
+  
 
   function popupMain (){//main popup function
     popupGsapOpen();
@@ -999,10 +1006,10 @@ let animationLocked = false; //flag to lock mouse animtion while additional popu
       backgroundColor: "rgba(0, 0, 0, 0.6)"  
     })
     popupGsapTL.fromTo(popupContainer,{
-      x:-700,
+      x: "-120%",
     },
     {
-      x:0,
+      x: "0%",
     }, "<")
 
  
@@ -1026,16 +1033,16 @@ let animationLocked = false; //flag to lock mouse animtion while additional popu
       opacity: 0,
 
     }, "-=1.5")
-
+console.log("Popup open animation works")
   }
 
   function popupGsapClose (){//gsap animation OUT for popup container and its content
 
     popupGsapTL.fromTo(popupContainer,{
-      x:0,
+      x: "0%",
     },
     {
-      x:-700,
+      x:"-120%",
     })
 
     popupGsapTL.to(lines, {//text animation
@@ -1087,6 +1094,7 @@ popupGsapTL.fromTo(sectionPopup, {
       duration: 1,
     },"<")
     
+    console.log("Popup close anuimation works")
   }
 
   function deactivatePopup() { // disactivating all the popup logic

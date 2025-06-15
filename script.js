@@ -1,26 +1,25 @@
 const page = document.body.dataset.page  //assingning to variable page current page data-attribute
 
 
-//code for the book page
-if (page === "book"){
-  // console.log("test")
   //logic for nav menu
   const menuButton = document.querySelector(".menu-button")
-  const menuButtonClose = document.querySelector(".close-wrapper")
-  const closeLinksWrap = document.querySelector(".close-nav-links");
-  const closeLinks = closeLinksWrap.querySelectorAll(".heading");
+  const menuButtonClose = document.querySelector(".close-link")
+  const closeLinksWrap = document.querySelector(".close-nav-wrap");
+  const closeLinks = closeLinksWrap.querySelectorAll(".close-nav-link");
   const clnav = gsap.timeline({defaults: {duration: 1}});
   function closeNavOpen (){ // logic for opening nav menu
       clnav.fromTo(closeLinks, {
         opacity: 0,
         x:50,
         ease: "power1.inOut",
+
       },
       {
         opacity: 1,
         x: 0,
         ease: "power1.inOut",
-        stagger: 0.1
+        stagger: 0.1,
+        
       }
       )
       }
@@ -45,6 +44,10 @@ if (page === "book"){
   closeLinks.forEach(link => {
   link.addEventListener('click',closeNavClose);
   });
+  
+
+//code for the book page
+if (page === "book"){
   
 
 // Animate the progress bar fill based on scroll
@@ -745,50 +748,6 @@ if (page === "home"){
   
   
   
-  
-  //logic for nav menu
-  const menuButton = document.querySelector(".menu-button")
-  const menuButtonClose = document.querySelector(".close-wrapper")
-  const closeLinksWrap = document.querySelector(".close-nav-links");
-  const closeLinks = closeLinksWrap.querySelectorAll(".heading");
-  const clnav = gsap.timeline({defaults: {duration: 1}});
-  function closeNavOpen (){
-      clnav.fromTo(closeLinks, {
-        opacity: 0,
-        x:50,
-        ease: "power1.inOut",
-      },
-      {
-        opacity: 1,
-        x: 0,
-        ease: "power1.inOut",
-        stagger: 0.1
-      }
-      )
-      }
-  function closeNavClose () {
-    clnav.fromTo(closeLinks, {
-      opacity: 1,
-      x:0,
-      ease: "power1.inOut",
-    },
-    {
-      opacity: 0,
-      x: 100,
-      ease: "power1.inOut",
-      stagger: 0.1,
-      duration: 0.5,
-    }
-    )
-  }
-  
-  menuButton.addEventListener('click', closeNavOpen); //menu button click open
-  menuButtonClose.addEventListener('click', closeNavClose); // menu button click close
-  closeLinks.forEach(link => {
-  link.addEventListener('click',closeNavClose);
-  });
-  
-
 
 
   //code for popup
@@ -832,10 +791,9 @@ let animationLocked = false; //flag to lock mouse animtion while additional popu
     if (isLargeScreen && isTouch) {
       popupMain(); // Run animation
     } else {
-      console.log("Too small or no mouse — skip animation");
+      closeButton.style.visibility = "hidden";
       popupGsapOpen()
       popupCloseTablet.addEventListener("click", (e)=>{
-        console.log("You clicked close for Tablets")
         e.stopPropagation();
         deactivatePopup();
         

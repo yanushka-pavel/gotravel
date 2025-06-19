@@ -46,6 +46,328 @@ const page = document.body.dataset.page  //assingning to variable page current p
   });
   
 
+
+  //code for popup
+  const popupContainer = document.querySelector(".popup_container");//container with content
+  const closeButton = document.querySelector(".close_button-wrap");//button
+  const closeInfo = document.querySelector(".close_info");//button info "close"
+  const sectionPopup = document.querySelector(".section_popup");
+  const popupTrigger = document.querySelectorAll('[data-attribute="popup"]')
+  const popupCloseTablet = document.querySelector('.popup-close-button');
+  
+  //for clarification popup
+  const clarification = document.querySelector(".clarification_wrap") // clarifiaction 
+  const clarificationTimeline = gsap.timeline();//gsap timeline
+  const clarLinkBack = document.querySelector(".clarification_link.is-back"); //back to form button
+  const clarLinkClose = document.querySelector(".clarification_link.is-close"); // still close the form
+
+  //popup gsap timelines
+  const popupGsapTL = gsap.timeline({defaults: {duration: 0.9, ease: "power2.inOut"}});
+  const popupTextElements = popupContainer.querySelectorAll(`h2, .body-text-l, .body-text-m, .button-wrapper.form`); //selecting all text elements inside container
+  const formInputs = popupContainer.querySelectorAll(".form-input");
+  let mySplitText =new SplitText(popupTextElements, {type: "lines", aria: "hidden"});//gsap split text declaration with clue parameters
+  let lines = mySplitText.lines; // assigning all lines to 1 variable
+
+
+
+ 
+
+//popup main code
+let isInside = true; // to track if mouse is inside the container
+let animating = false; //flag to check if the main animation in progress
+let clarOpen = false; // flag for additional popup play
+let animationLocked = false; //flag to lock mouse animtion while additional popup is opened
+
+ //popup trigger
+ popupTrigger.forEach(trigger => {
+  trigger.addEventListener("click", () => {
+    sectionPopup.style.visibility = "visible";
+    let isLargeScreen = window.matchMedia("(min-width: 992px)").matches;
+    let isTouch = window.matchMedia("(pointer: fine)").matches;
+
+    if (isLargeScreen && isTouch) {
+    console.log("screen size is large")
+    console.log(window.innerWidth)
+      popupMain(); // Run animation
+    } else {
+      console.log("the screeen is too small")
+      closeButton.style.visibility = "hidden";
+      popupGsapOpen()
+      popupCloseTablet.addEventListener("click", (e)=>{
+        e.stopPropagation();
+        deactivatePopup();
+        
+      }, {once: true})
+    }
+  });
+});
+  
+
+  function popupMain (){//main popup function
+    popupGsapOpen();
+    animationLocked = false;
+    closeButton.style.visibility = "hidden";
+    sectionPopup.style.visibility = "visible";
+    const mouse = { x: 0, y: 0 }; //tracks mouse position
+    const buttonPos = { x: 0, y: 0 };  // Tracks closeButton
+    const infoPos = { x: 0, y: 0 };    // Tracks closeInfo
+    
+    
+    popupContainer.addEventListener("mousemove", () => { // hide close button when inside container
+      isInside = true;
+      closeButton.style.visibility = "hidden";
+      closeInfo.style.visibility = "hidden";
+    });
+    
+    // popupContainer.addEventListener("mouseleave", () => { //tracking when the mouse leaves container
+    //   isInside = false;
+    // });
+    document.addEventListener("mousemove", (e) => {
+      const rect = popupContainer.getBoundingClientRect();
+      const inside =
+        e.clientX >= rect.left &&
+        e.clientX <= rect.right &&
+        e.clientY >= rect.top &&
+        e.clientY <= rect.bottom;
+    
+      if (inside !== isInside) {
+        isInside = inside;
+      }
+    });
+
+    //mousemove tracker
+    sectionPopup.addEventListener("mousemove", (e) => {
+      if(animationLocked) return;
+      mouse.x = e.clientX; //current mouse x position
+      mouse.y = e.clientY; //current mouse y position
+    
+      if (!isInside) { //when cursor is outside the container
+        
+        closeButton.style.visibility = "visible";
+        closeInfo.style.visibility = "visible";
+        document.body.style.cursor = "pointer";
+  
+        if (!animating) {
+          animating = true;
+          animate();
+        }
+    
+      } else {
+        closeButton.style.visibility = "hidden";
+        document.body.style.cursor = "default"; 
+      }
+    });
+
+    //mouse click tracker
+    sectionPopup.addEventListener("click", (e)=> {
+      if (!isInside && !clarOpen) {
+      
+         animationLocked = true;
+         clarPopOpen();
+         closeButton.style.visibility = "hidden";
+         closeInfo.style.visibility = "hidden";
+       
+      }
+    })
+  
+    //return to form logic
+    clarLinkBack.addEventListener("click", (e)=>{
+      if (!clarOpen) return;
+      e.stopPropagation(); //tracks only clicks on linkBack not considering sectionPopup
+      animationLocked = false;
+      clarBackToForm();
+    
+      
+      // resume animation if mouse is outside container
+      if (!isInside && !animating) {
+        animating = true;
+        animate()
+        closeButton.style.visibility = "visible";
+        closeInfo.style.visibility = "visible";
+      }
+       
+  
+     })
+  
+  //functions for popup
+  function clarPopOpen () { // animation for click outside the container
+
+    //need find a way to block it while its closed
+    clarOpen = true;
+    clarification.style.visibility = "visible";
+    clarificationTimeline.fromTo(clarification,{
+    scale: 0,
+    opacity: 0,
+    },{
+      scale:1,
+      opacity:1,
+      ease: "bounce.Out",
+  })
+  console.log("1")
+  }
+
+  function clarBackToForm (){
+  console.log("problem is here")
+  clarOpen = false;
+  clarificationTimeline.fromTo(clarification,{
+  scale: 1,
+  opacity: 1,
+  },{
+    scale:0.2,
+    duration: 0.5,
+    opacity:0,
+    ease: "power1.inOut",
+})
+  
+  
+  }
+  function animate() { // animation for cursor
+      const speed1 = 0.3;  // Button delay
+      const speed2 = 0.1; // Info delay (slower)
+    
+      buttonPos.x += (mouse.x - buttonPos.x) * speed1;
+      buttonPos.y += (mouse.y - buttonPos.y) * speed1;
+    
+      infoPos.x += (mouse.x - infoPos.x) * speed2;
+      infoPos.y += (mouse.y - infoPos.y) * speed2;
+    
+      closeButton.style.left = `${buttonPos.x}px`;
+      closeButton.style.top = `${buttonPos.y}px`;
+    
+      closeInfo.style.left = `${infoPos.x + 20}px`;
+      closeInfo.style.top = `${infoPos.y-20}px`;
+    
+      // Keep animating only while visible
+      if (!isInside) {
+        requestAnimationFrame(animate);
+      } else {
+        animating = false;
+      }
+    }
+  }
+//close form anyway logic
+    clarLinkClose.addEventListener("click", (e)=> {//resetting all the properties to 0 and hidden
+      e.stopPropagation();
+      console.log("u clicked link close");    
+      deactivatePopup();    
+    
+    })
+
+  function popupGsapOpen (){ //animation for container and its content after the popup is opened
+    //container animation
+    gsap.set([lines, formInputs, popupContainer], {
+      clearProps: "all" // removes all inline transform/opacity styles
+    }, 0);
+    popupGsapTL.fromTo(sectionPopup, {
+      backgroundColor: "rgba(0, 0, 0, 0)"  
+    },{
+      backgroundColor: "rgba(0, 0, 0, 0.6)"  
+    })
+    popupGsapTL.fromTo(popupContainer,{
+      x: "-120%",
+    },
+    {
+      x: "0%",
+    }, "<")
+
+ 
+    popupTextElements[0].style.overflow = "hidden";
+    
+    popupGsapTL.from(lines, {//text animation
+      y: "120%",
+      x: "-10%",
+      opacity: 0,
+      duration: 1.2,
+      stagger: {
+        each: 0.02,
+        from: "start"
+      },
+      ease: "power4.out",
+    }, "<0.5");
+
+    popupGsapTL.from(formInputs, {//form inputs animation
+      y: "30%",
+      x: "-10%",
+      opacity: 0,
+
+    }, "-=1.5")
+console.log("Popup open animation works")
+  }
+
+  function popupGsapClose (){//gsap animation OUT for popup container and its content
+
+    popupGsapTL.fromTo(popupContainer,{
+      x: "0%",
+    },
+    {
+      x:"-120%",
+    })
+
+    popupGsapTL.to(lines, {//text animation
+      y: "30%",
+      x: "-10%",
+      opacity: 0,
+      duration: 1.2,
+      stagger: {
+        each: 0.02,
+        from: "start"
+      },
+      ease: "power4.out",
+    }, "<");
+
+
+    //code for closing clar menu
+    clarOpen = false;
+    clarificationTimeline.fromTo(clarification,{
+    scale: 1,
+    opacity: 1,
+    },{
+      scale:0.2,
+      duration: 0.5,
+      opacity:0,
+      ease: "power1.inOut",
+  })
+    //code for closing clar menu
+
+
+
+    popupGsapTL.to(formInputs, {//form inputs animation
+      y: "0%",
+      x: "-10%",
+      opacity: 0,
+      onComplete: () =>{
+        sectionPopup.style.visibility = "hidden";
+        clarification.style.visibility = "hidden";
+        closeButton.style.visibility = "hidden";
+        closeInfo.style.visibility = "hidden";
+        document.body.style.cursor = "default";
+      }
+
+    }, "-=1.5")
+
+popupGsapTL.fromTo(sectionPopup, {
+      backgroundColor: "rgba(0, 0, 0, 0.6)"  
+    },{
+      backgroundColor: "rgba(0, 0, 0, 0)",
+      duration: 1,
+    },"<")
+    
+    console.log("Popup close anuimation works")
+  }
+
+  function deactivatePopup() { // disactivating all the popup logic
+    popupGsapClose();
+   
+  
+    // Reset flags
+    animating = false;
+    clarOpen = false;
+    animationLocked = true;
+
+  }
+
+
+  
 //code for the book page
 if (page === "book"){
   
@@ -748,323 +1070,6 @@ if (page === "home"){
   
   
   
-
-
-  //code for popup
-  const popupContainer = document.querySelector(".popup_container");//container with content
-  const closeButton = document.querySelector(".close_button-wrap");//button
-  const closeInfo = document.querySelector(".close_info");//button info "close"
-  const sectionPopup = document.querySelector(".section_popup");
-  const popupTrigger = document.querySelectorAll('[data-attribute="popup"]')
-  const popupCloseTablet = document.querySelector('.popup-close-button');
-  
-  //for clarification popup
-  const clarification = document.querySelector(".clarification_wrap") // clarifiaction 
-  const clarificationTimeline = gsap.timeline();//gsap timeline
-  const clarLinkBack = document.querySelector(".clarification_link.is-back"); //back to form button
-  const clarLinkClose = document.querySelector(".clarification_link.is-close"); // still close the form
-
-  //popup gsap timelines
-  const popupGsapTL = gsap.timeline({defaults: {duration: 0.9, ease: "power2.inOut"}});
-  const popupTextElements = popupContainer.querySelectorAll(`h2, .body-text-l, .body-text-m, .button-wrapper.form`); //selecting all text elements inside container
-  const formInputs = popupContainer.querySelectorAll(".form-input");
-  let mySplitText =new SplitText(popupTextElements, {type: "lines", aria: "hidden"});//gsap split text declaration with clue parameters
-  let lines = mySplitText.lines; // assigning all lines to 1 variable
-
-
-
- 
-
-//popup main code
-let isInside = true; // to track if mouse is inside the container
-let animating = false; //flag to check if the main animation in progress
-let clarOpen = false; // flag for additional popup play
-let animationLocked = false; //flag to lock mouse animtion while additional popup is opened
-
- //popup trigger
- popupTrigger.forEach(trigger => {
-  trigger.addEventListener("click", () => {
-    sectionPopup.style.visibility = "visible";
-    let isLargeScreen = window.innerWidth > 991;
-    let isTouch = window.matchMedia("(pointer: fine)").matches;
-
-    if (isLargeScreen && isTouch) {
-      popupMain(); // Run animation
-    } else {
-      closeButton.style.visibility = "hidden";
-      popupGsapOpen()
-      popupCloseTablet.addEventListener("click", (e)=>{
-        e.stopPropagation();
-        deactivatePopup();
-        
-      }, {once: true})
-    }
-  });
-});
-  
-
-  function popupMain (){//main popup function
-    popupGsapOpen();
-    animationLocked = false;
-    closeButton.style.visibility = "hidden";
-    sectionPopup.style.visibility = "visible";
-    const mouse = { x: 0, y: 0 }; //tracks mouse position
-    const buttonPos = { x: 0, y: 0 };  // Tracks closeButton
-    const infoPos = { x: 0, y: 0 };    // Tracks closeInfo
-    
-    
-    popupContainer.addEventListener("mousemove", () => { // hide close button when inside container
-      isInside = true;
-      closeButton.style.visibility = "hidden";
-      closeInfo.style.visibility = "hidden";
-    });
-    
-    // popupContainer.addEventListener("mouseleave", () => { //tracking when the mouse leaves container
-    //   isInside = false;
-    // });
-    document.addEventListener("mousemove", (e) => {
-      const rect = popupContainer.getBoundingClientRect();
-      const inside =
-        e.clientX >= rect.left &&
-        e.clientX <= rect.right &&
-        e.clientY >= rect.top &&
-        e.clientY <= rect.bottom;
-    
-      if (inside !== isInside) {
-        isInside = inside;
-      }
-    });
-
-    //mousemove tracker
-    sectionPopup.addEventListener("mousemove", (e) => {
-      if(animationLocked) return;
-      mouse.x = e.clientX; //current mouse x position
-      mouse.y = e.clientY; //current mouse y position
-    
-      if (!isInside) { //when cursor is outside the container
-        
-        closeButton.style.visibility = "visible";
-        closeInfo.style.visibility = "visible";
-        document.body.style.cursor = "pointer";
-  
-        if (!animating) {
-          animating = true;
-          animate();
-        }
-    
-      } else {
-        closeButton.style.visibility = "hidden";
-        document.body.style.cursor = "default"; 
-      }
-    });
-
-    //mouse click tracker
-    sectionPopup.addEventListener("click", (e)=> {
-      if (!isInside && !clarOpen) {
-      
-         animationLocked = true;
-         clarPopOpen();
-         closeButton.style.visibility = "hidden";
-         closeInfo.style.visibility = "hidden";
-       
-      }
-    })
-  
-    //return to form logic
-    clarLinkBack.addEventListener("click", (e)=>{
-      if (!clarOpen) return;
-      e.stopPropagation(); //tracks only clicks on linkBack not considering sectionPopup
-      animationLocked = false;
-      clarBackToForm();
-    
-      
-      // resume animation if mouse is outside container
-      if (!isInside && !animating) {
-        animating = true;
-        animate()
-        closeButton.style.visibility = "visible";
-        closeInfo.style.visibility = "visible";
-      }
-       
-  
-     })
-  
-  //functions for popup
-  function clarPopOpen () { // animation for click outside the container
-
-    //need find a way to block it while its closed
-    clarOpen = true;
-    clarification.style.visibility = "visible";
-    clarificationTimeline.fromTo(clarification,{
-    scale: 0,
-    opacity: 0,
-    },{
-      scale:1,
-      opacity:1,
-      ease: "bounce.Out",
-  })
-  console.log("1")
-  }
-
-  function clarBackToForm (){
-  console.log("problem is here")
-  clarOpen = false;
-  clarificationTimeline.fromTo(clarification,{
-  scale: 1,
-  opacity: 1,
-  },{
-    scale:0.2,
-    duration: 0.5,
-    opacity:0,
-    ease: "power1.inOut",
-})
-  
-  
-  }
-  function animate() { // animation for cursor
-      const speed1 = 0.3;  // Button delay
-      const speed2 = 0.1; // Info delay (slower)
-    
-      buttonPos.x += (mouse.x - buttonPos.x) * speed1;
-      buttonPos.y += (mouse.y - buttonPos.y) * speed1;
-    
-      infoPos.x += (mouse.x - infoPos.x) * speed2;
-      infoPos.y += (mouse.y - infoPos.y) * speed2;
-    
-      closeButton.style.left = `${buttonPos.x}px`;
-      closeButton.style.top = `${buttonPos.y}px`;
-    
-      closeInfo.style.left = `${infoPos.x + 20}px`;
-      closeInfo.style.top = `${infoPos.y-20}px`;
-    
-      // Keep animating only while visible
-      if (!isInside) {
-        requestAnimationFrame(animate);
-      } else {
-        animating = false;
-      }
-    }
-  }
-//close form anyway logic
-    clarLinkClose.addEventListener("click", (e)=> {//resetting all the properties to 0 and hidden
-      e.stopPropagation();
-      console.log("u clicked link close");    
-      deactivatePopup();    
-    
-    })
-
-  function popupGsapOpen (){ //animation for container and its content after the popup is opened
-    //container animation
-    gsap.set([lines, formInputs, popupContainer], {
-      clearProps: "all" // removes all inline transform/opacity styles
-    }, 0);
-    popupGsapTL.fromTo(sectionPopup, {
-      backgroundColor: "rgba(0, 0, 0, 0)"  
-    },{
-      backgroundColor: "rgba(0, 0, 0, 0.6)"  
-    })
-    popupGsapTL.fromTo(popupContainer,{
-      x: "-120%",
-    },
-    {
-      x: "0%",
-    }, "<")
-
- 
-    popupTextElements[0].style.overflow = "hidden";
-    
-    popupGsapTL.from(lines, {//text animation
-      y: "120%",
-      x: "-10%",
-      opacity: 0,
-      duration: 1.2,
-      stagger: {
-        each: 0.02,
-        from: "start"
-      },
-      ease: "power4.out",
-    }, "<0.5");
-
-    popupGsapTL.from(formInputs, {//form inputs animation
-      y: "30%",
-      x: "-10%",
-      opacity: 0,
-
-    }, "-=1.5")
-console.log("Popup open animation works")
-  }
-
-  function popupGsapClose (){//gsap animation OUT for popup container and its content
-
-    popupGsapTL.fromTo(popupContainer,{
-      x: "0%",
-    },
-    {
-      x:"-120%",
-    })
-
-    popupGsapTL.to(lines, {//text animation
-      y: "30%",
-      x: "-10%",
-      opacity: 0,
-      duration: 1.2,
-      stagger: {
-        each: 0.02,
-        from: "start"
-      },
-      ease: "power4.out",
-    }, "<");
-
-
-    //code for closing clar menu
-    clarOpen = false;
-    clarificationTimeline.fromTo(clarification,{
-    scale: 1,
-    opacity: 1,
-    },{
-      scale:0.2,
-      duration: 0.5,
-      opacity:0,
-      ease: "power1.inOut",
-  })
-    //code for closing clar menu
-
-
-
-    popupGsapTL.to(formInputs, {//form inputs animation
-      y: "0%",
-      x: "-10%",
-      opacity: 0,
-      onComplete: () =>{
-        sectionPopup.style.visibility = "hidden";
-        clarification.style.visibility = "hidden";
-        closeButton.style.visibility = "hidden";
-        closeInfo.style.visibility = "hidden";
-        document.body.style.cursor = "default";
-      }
-
-    }, "-=1.5")
-
-popupGsapTL.fromTo(sectionPopup, {
-      backgroundColor: "rgba(0, 0, 0, 0.6)"  
-    },{
-      backgroundColor: "rgba(0, 0, 0, 0)",
-      duration: 1,
-    },"<")
-    
-    console.log("Popup close anuimation works")
-  }
-
-  function deactivatePopup() { // disactivating all the popup logic
-    popupGsapClose();
-   
-  
-    // Reset flags
-    animating = false;
-    clarOpen = false;
-    animationLocked = true;
-
-  }
 
   //add smooth bg animation, span stagger for elements inside form container. animation for closing. Animtion for steps section.
 

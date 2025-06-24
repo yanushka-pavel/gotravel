@@ -62,7 +62,7 @@ const page = document.body.dataset.page  //assingning to variable page current p
   const clarLinkClose = document.querySelector(".clarification_link.is-close"); // still close the form
 
   //popup gsap timelines
-  const popupGsapTL = gsap.timeline({defaults: {duration: 0.9, ease: "power2.inOut"}});
+  
   const popupTextElements = popupContainer.querySelectorAll(`h2, .body-text-l, .body-text-m, .button-wrapper.form`); //selecting all text elements inside container
   const formInputs = popupContainer.querySelectorAll(".form-input");
   let mySplitText =new SplitText(popupTextElements, {type: "lines", aria: "hidden"});//gsap split text declaration with clue parameters
@@ -160,15 +160,17 @@ let animationLocked = false; //flag to lock mouse animtion while additional popu
 
     //mouse click tracker
     sectionPopup.addEventListener("click", (e)=> {
-      if (!isInside && !clarOpen) {
+      e.stopPropagation();
+      if (!isInside) {
       
          animationLocked = true;
-         clarPopOpen();
+         
+        //  clarPopOpen();
          closeButton.style.visibility = "hidden";
          closeInfo.style.visibility = "hidden";
-       
+         deactivatePopup(); 
       }
-    })
+    },{once: true})
   
     //return to form logic
     clarLinkBack.addEventListener("click", (e)=>{
@@ -246,15 +248,16 @@ let animationLocked = false; //flag to lock mouse animtion while additional popu
     }
   }
 //close form anyway logic
-    clarLinkClose.addEventListener("click", (e)=> {//resetting all the properties to 0 and hidden
-      e.stopPropagation();
-      console.log("u clicked link close");    
-      deactivatePopup();    
+    // clarLinkClose.addEventListener("click", (e)=> {//resetting all the properties to 0 and hidden
+    //   e.stopPropagation();
+    //   console.log("u clicked link close");    
+    //   deactivatePopup();    
     
-    })
+    // })
 
   function popupGsapOpen (){ //animation for container and its content after the popup is opened
     //container animation
+    const popupGsapTL = gsap.timeline({defaults: {duration: 0.9, ease: "power2.inOut"}});
     gsap.set([lines, formInputs, popupContainer], {
       clearProps: "all" // removes all inline transform/opacity styles
     }, 0);
@@ -295,15 +298,15 @@ console.log("Popup open animation works")
   }
 
   function popupGsapClose (){//gsap animation OUT for popup container and its content
-
-    popupGsapTL.fromTo(popupContainer,{
+    const popupGsapTLClose = gsap.timeline({defaults: {duration: 0.9, ease: "power2.inOut"}});
+    popupGsapTLClose.fromTo(popupContainer,{
       x: "0%",
     },
     {
       x:"-120%",
-    })
+    },)
 
-    popupGsapTL.to(lines, {//text animation
+    popupGsapTLClose.to(lines, {//text animation
       y: "30%",
       x: "-10%",
       opacity: 0,
@@ -316,28 +319,28 @@ console.log("Popup open animation works")
     }, "<");
 
 
-    //code for closing clar menu
-    clarOpen = false;
-    clarificationTimeline.fromTo(clarification,{
-    scale: 1,
-    opacity: 1,
-    },{
-      scale:0.2,
-      duration: 0.5,
-      opacity:0,
-      ease: "power1.inOut",
-  })
-    //code for closing clar menu
+  //   //code for closing clar menu
+  //   clarOpen = false;
+  //   clarificationTimeline.fromTo(clarification,{
+  //   scale: 1,
+  //   opacity: 1,
+  //   },{
+  //     scale:0.2,
+  //     duration: 0.5,
+  //     opacity:0,
+  //     ease: "power1.inOut",
+  // })
+  //   //code for closing clar menu
 
 
 
-    popupGsapTL.to(formInputs, {//form inputs animation
+    popupGsapTLClose.to(formInputs, {//form inputs animation
       y: "0%",
       x: "-10%",
       opacity: 0,
       onComplete: () =>{
         sectionPopup.style.visibility = "hidden";
-        clarification.style.visibility = "hidden";
+        // clarification.style.visibility = "hidden";
         closeButton.style.visibility = "hidden";
         closeInfo.style.visibility = "hidden";
         document.body.style.cursor = "default";
@@ -345,14 +348,14 @@ console.log("Popup open animation works")
 
     }, "-=1.5")
 
-popupGsapTL.fromTo(sectionPopup, {
+popupGsapTLClose.fromTo(sectionPopup, {
       backgroundColor: "rgba(0, 0, 0, 0.6)"  
     },{
       backgroundColor: "rgba(0, 0, 0, 0)",
       duration: 1,
     },"<")
     
-    console.log("Popup close anuimation works")
+    console.log("Popup close animation works")
   }
 
   function deactivatePopup() { // disactivating all the popup logic
@@ -361,7 +364,7 @@ popupGsapTL.fromTo(sectionPopup, {
   
     // Reset flags
     animating = false;
-    clarOpen = false;
+    // clarOpen = false;
     animationLocked = true;
 
   }
@@ -954,12 +957,13 @@ if (page === "home"){
   timeline.to(line, {
     rotate: 90,
     transformOrigin: "center",
+    stroke: "#40583D",
   });
   timeline.to(circle, {
   strokeDashoffset: 0,
   }, "<")
   timeline.to(circle, {
-   opacity: 0,
+   opacity: 1,
    duration: 0.4,
     }); 
   };
@@ -975,6 +979,7 @@ if (page === "home"){
   timeline.to(line, {
     rotate: 0,
     transformOrigin: "center",
+    stroke: "#85A781",
   },"<");
   timeline.to(circle,{
     strokeDashoffset: length,
@@ -1079,3 +1084,4 @@ if (page === "home"){
 }; //end of the home page code
 //////////////////////////////////
 
+console.log("last test")

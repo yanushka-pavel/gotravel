@@ -3,31 +3,30 @@ const page = document.body.dataset.page  //assingning to variable page current p
 
   //logic for nav menu
   const menuButton = document.querySelector(".menu-button")
-  const menuButtonClose = document.querySelector(".close-link")
+  const menuButtonClose = document.querySelector(".close-link");
+  const closeNav = document.querySelector(".close-nav");
   const closeLinksWrap = document.querySelector(".close-nav-wrap");
   const closeLinks = closeLinksWrap.querySelectorAll(".close-nav-link");
-  const clnav = gsap.timeline({defaults: {duration: 1}});
+  closeNav.setAttribute('inert','');
+ 
   function closeNavOpen (){ // logic for opening nav menu
-      clnav.fromTo(closeLinks, {
-        opacity: 0,
-        x:50,
-        ease: "power1.inOut",
+  closeNav.removeAttribute('inert');
+  gsap.set(closeLinks, { clearProps: "transform" });
+  gsap.fromTo(closeLinks, {
+  opacity: 0,
+  x: 100,
+ 
+}, {
+  x:0,
+  opacity: 1,
+   stagger: 0.1,
+   ease: "power2.inOut",
+});
+      }
 
-      },
-      {
-        opacity: 1,
-        x: 0,
-        ease: "power1.inOut",
-        stagger: 0.1,
-        
-      }
-      )
-      }
   function closeNavClose () { // logic for closing nav menu
-    clnav.fromTo(closeLinks, {
+    gsap.fromTo(closeLinks, {
       opacity: 1,
-      x:0,
-      ease: "power1.inOut",
     },
     {
       opacity: 0,
@@ -38,7 +37,9 @@ const page = document.body.dataset.page  //assingning to variable page current p
     }
     )
   }
-  
+ 
+
+
   menuButton.addEventListener('click', closeNavOpen); //menu button click open
   menuButtonClose.addEventListener('click', closeNavClose); // menu button click close
   closeLinks.forEach(link => {
@@ -447,6 +448,7 @@ progressTL.to(".progress-fill", { //line animation
 
 gsap.to('.nav_component', {
 backgroundColor: "#e9f0e8",
+ease: "power2.inOut",
 });
 
 
@@ -717,6 +719,10 @@ if (page === "home"){
       (context) => {
           const {isDesktop, isTablet, isMobileLandscape, isMobile} = context.conditions;
           if(isDesktop){
+            gsap.set(leftContent,{
+              opacity:1,
+              y: 0,
+            });
               const zs = gsap.timeline({
                   scrollTrigger: {
                       trigger: ".section_home-hero",
@@ -779,10 +785,8 @@ if (page === "home"){
                       opacity: 0,
                       duration: 0.4,
                       ease: "power1.inOut",
-                    },"<2")
-                    zs.to('.nav_component', {
-                      backgroundColor: "#e9f0e8",
-                    },"<");
+                    },"<2");
+                   
                  
                     const hc = gsap.timeline( {
                       scrollTrigger: {
@@ -796,9 +800,16 @@ if (page === "home"){
                     hc.to(".hero_cover", {
                       opacity: 0,
                       ease: "power1.out",
-                    })
+                    });
+                     hc.to('.nav_component', {
+                      backgroundColor: "#e9f0e8",
+                    });
           }
           else{
+            gsap.set(leftContent,{
+              opacity:1,
+              y:0,
+            });
               const zs = gsap.timeline({
                   scrollTrigger: {
                       trigger: ".home_hero_item-right",
@@ -859,10 +870,7 @@ if (page === "home"){
                       opacity: 0,
                       duration: 4,
                       ease: "power1.inOut",
-                    },">")
-                    zs.to('.nav_component', {
-                      backgroundColor: "#e9f0e8",
-                    },"<");
+                    },">");
   
   
                     const hc = gsap.timeline( {
@@ -877,7 +885,10 @@ if (page === "home"){
                     hc.to(".hero_cover", {
                       opacity: 0,
                       ease: "power1.out",
-                    })
+                    });
+                     hc.to('.nav_component', {
+                      backgroundColor: "#e9f0e8",
+                    });
                  
           }
       }

@@ -1,4 +1,9 @@
-const page = document.body.dataset.page  //assingning to variable page current page data-attribute
+const page = document.body.dataset.page  //assingning to variable page current page data-attribute\\
+console.log("test-6")
+import "./style.css";//css import
+import { animateSplitText } from "./animations/book-splittext";
+let testSPlitClick = document.querySelector('.heading.l.tc-green-07')
+animateSplitText(testSPlitClick)
 
 
   //logic for nav menu
@@ -90,6 +95,11 @@ let animationLocked = false; //flag to lock mouse animtion while additional popu
     console.log("screen size is large")
     console.log(window.innerWidth)
       popupMain(); // Run animation
+       popupCloseTablet.addEventListener("click", (e)=>{
+        e.stopPropagation();
+        deactivatePopup();
+        
+      }, {once: true})
     } else {
       console.log("the screeen is too small")
       closeButton.style.visibility = "hidden";
@@ -487,12 +497,12 @@ if (page === "home"){
   // console.log("Home page logged")
 
   const circle= []; // assigning circles classes to an array
-  for (i=1; i<=6; i++) {
+  for (let i=1; i<=6; i++) {
   circle.push(document.querySelector(`.circle-0${i}`))
   }
   
   const dash = []; // assigning dashes classes to an array
-  for(j=1; j<=5; j++){
+  for(let j=1; j<=5; j++){
       dash.push(document.querySelector(`.dash-0${j}`));
   };
   
@@ -502,14 +512,14 @@ if (page === "home"){
   })
   
   const dashLength = []; // loop for assigning dash length fpr new array
-  for (k=0; k<dash.length; k++){
+  for (let k=0; k<dash.length; k++){
      let dashValue = dash[k].getTotalLength();
      dashLength.push(dashValue);
       }
       // console.log(dashLength[2]);
   
   const line = []; //lines declaration
-      for (l=1; l<=6; l++){
+      for (let l=1; l<=6; l++){
       line.push(document.querySelector(`.line-0${l}`));
       }
   
@@ -527,7 +537,7 @@ if (page === "home"){
   
   //declaration for faq section
   const faqItem = [];
-  for (f=1; f<=5; f++) {
+  for (let f=1; f<=5; f++) {
     faqItem.push(document.querySelector(`.accordion_item.is-${f}`))
   }
   

@@ -1,33 +1,37 @@
-const page = document.body.dataset.page  //assingning to variable page current page data-attribute
+const page = document.body.dataset.page  //assingning to variable page current page data-attribute\\
+console.log("test-6")
+import "./style.css";//css import
+import { animateSplitText } from "./animations/book-splittext";
+let testSPlitClick = document.querySelector('.heading.l.tc-green-07')
+animateSplitText(testSPlitClick)
 
 
   //logic for nav menu
   const menuButton = document.querySelector(".menu-button")
-  const menuButtonClose = document.querySelector(".close-link")
+  const menuButtonClose = document.querySelector(".close-link");
+  const closeNav = document.querySelector(".close-nav");
   const closeLinksWrap = document.querySelector(".close-nav-wrap");
   const closeLinks = closeLinksWrap.querySelectorAll(".close-nav-link");
-  const clnav = gsap.timeline({defaults: {duration: 1}});
+  closeNav.setAttribute('inert','');
+ 
   function closeNavOpen (){ // logic for opening nav menu
-      clnav.fromTo(closeLinks, {
-        opacity: 0,
-        x:50,
-        ease: "power1.inOut",
+  closeNav.removeAttribute('inert');
+  gsap.set(closeLinks, { clearProps: "transform" });
+  gsap.fromTo(closeLinks, {
+  opacity: 0,
+  x: 100,
+ 
+}, {
+  x:0,
+  opacity: 1,
+   stagger: 0.1,
+   ease: "power2.inOut",
+});
+      }
 
-      },
-      {
-        opacity: 1,
-        x: 0,
-        ease: "power1.inOut",
-        stagger: 0.1,
-        
-      }
-      )
-      }
   function closeNavClose () { // logic for closing nav menu
-    clnav.fromTo(closeLinks, {
+    gsap.fromTo(closeLinks, {
       opacity: 1,
-      x:0,
-      ease: "power1.inOut",
     },
     {
       opacity: 0,
@@ -38,7 +42,9 @@ const page = document.body.dataset.page  //assingning to variable page current p
     }
     )
   }
-  
+ 
+
+
   menuButton.addEventListener('click', closeNavOpen); //menu button click open
   menuButtonClose.addEventListener('click', closeNavClose); // menu button click close
   closeLinks.forEach(link => {
@@ -62,7 +68,7 @@ const page = document.body.dataset.page  //assingning to variable page current p
   const clarLinkClose = document.querySelector(".clarification_link.is-close"); // still close the form
 
   //popup gsap timelines
-  const popupGsapTL = gsap.timeline({defaults: {duration: 0.9, ease: "power2.inOut"}});
+  
   const popupTextElements = popupContainer.querySelectorAll(`h2, .body-text-l, .body-text-m, .button-wrapper.form`); //selecting all text elements inside container
   const formInputs = popupContainer.querySelectorAll(".form-input");
   let mySplitText =new SplitText(popupTextElements, {type: "lines", aria: "hidden"});//gsap split text declaration with clue parameters
@@ -89,6 +95,11 @@ let animationLocked = false; //flag to lock mouse animtion while additional popu
     console.log("screen size is large")
     console.log(window.innerWidth)
       popupMain(); // Run animation
+       popupCloseTablet.addEventListener("click", (e)=>{
+        e.stopPropagation();
+        deactivatePopup();
+        
+      }, {once: true})
     } else {
       console.log("the screeen is too small")
       closeButton.style.visibility = "hidden";
@@ -160,15 +171,17 @@ let animationLocked = false; //flag to lock mouse animtion while additional popu
 
     //mouse click tracker
     sectionPopup.addEventListener("click", (e)=> {
-      if (!isInside && !clarOpen) {
+      e.stopPropagation();
+      if (!isInside) {
       
          animationLocked = true;
-         clarPopOpen();
+         
+        //  clarPopOpen();
          closeButton.style.visibility = "hidden";
          closeInfo.style.visibility = "hidden";
-       
+         deactivatePopup(); 
       }
-    })
+    },{once: true})
   
     //return to form logic
     clarLinkBack.addEventListener("click", (e)=>{
@@ -246,15 +259,16 @@ let animationLocked = false; //flag to lock mouse animtion while additional popu
     }
   }
 //close form anyway logic
-    clarLinkClose.addEventListener("click", (e)=> {//resetting all the properties to 0 and hidden
-      e.stopPropagation();
-      console.log("u clicked link close");    
-      deactivatePopup();    
+    // clarLinkClose.addEventListener("click", (e)=> {//resetting all the properties to 0 and hidden
+    //   e.stopPropagation();
+    //   console.log("u clicked link close");    
+    //   deactivatePopup();    
     
-    })
+    // })
 
   function popupGsapOpen (){ //animation for container and its content after the popup is opened
     //container animation
+    const popupGsapTL = gsap.timeline({defaults: {duration: 0.9, ease: "power2.inOut"}});
     gsap.set([lines, formInputs, popupContainer], {
       clearProps: "all" // removes all inline transform/opacity styles
     }, 0);
@@ -295,15 +309,15 @@ console.log("Popup open animation works")
   }
 
   function popupGsapClose (){//gsap animation OUT for popup container and its content
-
-    popupGsapTL.fromTo(popupContainer,{
+    const popupGsapTLClose = gsap.timeline({defaults: {duration: 0.9, ease: "power2.inOut"}});
+    popupGsapTLClose.fromTo(popupContainer,{
       x: "0%",
     },
     {
       x:"-120%",
-    })
+    },)
 
-    popupGsapTL.to(lines, {//text animation
+    popupGsapTLClose.to(lines, {//text animation
       y: "30%",
       x: "-10%",
       opacity: 0,
@@ -316,28 +330,28 @@ console.log("Popup open animation works")
     }, "<");
 
 
-    //code for closing clar menu
-    clarOpen = false;
-    clarificationTimeline.fromTo(clarification,{
-    scale: 1,
-    opacity: 1,
-    },{
-      scale:0.2,
-      duration: 0.5,
-      opacity:0,
-      ease: "power1.inOut",
-  })
-    //code for closing clar menu
+  //   //code for closing clar menu
+  //   clarOpen = false;
+  //   clarificationTimeline.fromTo(clarification,{
+  //   scale: 1,
+  //   opacity: 1,
+  //   },{
+  //     scale:0.2,
+  //     duration: 0.5,
+  //     opacity:0,
+  //     ease: "power1.inOut",
+  // })
+  //   //code for closing clar menu
 
 
 
-    popupGsapTL.to(formInputs, {//form inputs animation
+    popupGsapTLClose.to(formInputs, {//form inputs animation
       y: "0%",
       x: "-10%",
       opacity: 0,
       onComplete: () =>{
         sectionPopup.style.visibility = "hidden";
-        clarification.style.visibility = "hidden";
+        // clarification.style.visibility = "hidden";
         closeButton.style.visibility = "hidden";
         closeInfo.style.visibility = "hidden";
         document.body.style.cursor = "default";
@@ -345,14 +359,14 @@ console.log("Popup open animation works")
 
     }, "-=1.5")
 
-popupGsapTL.fromTo(sectionPopup, {
+popupGsapTLClose.fromTo(sectionPopup, {
       backgroundColor: "rgba(0, 0, 0, 0.6)"  
     },{
       backgroundColor: "rgba(0, 0, 0, 0)",
       duration: 1,
     },"<")
     
-    console.log("Popup close anuimation works")
+    console.log("Popup close animation works")
   }
 
   function deactivatePopup() { // disactivating all the popup logic
@@ -361,7 +375,7 @@ popupGsapTL.fromTo(sectionPopup, {
   
     // Reset flags
     animating = false;
-    clarOpen = false;
+    // clarOpen = false;
     animationLocked = true;
 
   }
@@ -444,6 +458,7 @@ progressTL.to(".progress-fill", { //line animation
 
 gsap.to('.nav_component', {
 backgroundColor: "#e9f0e8",
+ease: "power2.inOut",
 });
 
 
@@ -482,12 +497,12 @@ if (page === "home"){
   // console.log("Home page logged")
 
   const circle= []; // assigning circles classes to an array
-  for (i=1; i<=6; i++) {
+  for (let i=1; i<=6; i++) {
   circle.push(document.querySelector(`.circle-0${i}`))
   }
   
   const dash = []; // assigning dashes classes to an array
-  for(j=1; j<=5; j++){
+  for(let j=1; j<=5; j++){
       dash.push(document.querySelector(`.dash-0${j}`));
   };
   
@@ -497,14 +512,14 @@ if (page === "home"){
   })
   
   const dashLength = []; // loop for assigning dash length fpr new array
-  for (k=0; k<dash.length; k++){
+  for (let k=0; k<dash.length; k++){
      let dashValue = dash[k].getTotalLength();
      dashLength.push(dashValue);
       }
       // console.log(dashLength[2]);
   
   const line = []; //lines declaration
-      for (l=1; l<=6; l++){
+      for (let l=1; l<=6; l++){
       line.push(document.querySelector(`.line-0${l}`));
       }
   
@@ -522,7 +537,7 @@ if (page === "home"){
   
   //declaration for faq section
   const faqItem = [];
-  for (f=1; f<=5; f++) {
+  for (let f=1; f<=5; f++) {
     faqItem.push(document.querySelector(`.accordion_item.is-${f}`))
   }
   
@@ -714,6 +729,10 @@ if (page === "home"){
       (context) => {
           const {isDesktop, isTablet, isMobileLandscape, isMobile} = context.conditions;
           if(isDesktop){
+            gsap.set(leftContent,{
+              opacity:1,
+              y: 0,
+            });
               const zs = gsap.timeline({
                   scrollTrigger: {
                       trigger: ".section_home-hero",
@@ -776,10 +795,8 @@ if (page === "home"){
                       opacity: 0,
                       duration: 0.4,
                       ease: "power1.inOut",
-                    },"<2")
-                    zs.to('.nav_component', {
-                      backgroundColor: "#e9f0e8",
-                    },"<");
+                    },"<2");
+                   
                  
                     const hc = gsap.timeline( {
                       scrollTrigger: {
@@ -793,9 +810,16 @@ if (page === "home"){
                     hc.to(".hero_cover", {
                       opacity: 0,
                       ease: "power1.out",
-                    })
+                    });
+                     hc.to('.nav_component', {
+                      backgroundColor: "#e9f0e8",
+                    });
           }
           else{
+            gsap.set(leftContent,{
+              opacity:1,
+              y:0,
+            });
               const zs = gsap.timeline({
                   scrollTrigger: {
                       trigger: ".home_hero_item-right",
@@ -856,10 +880,7 @@ if (page === "home"){
                       opacity: 0,
                       duration: 4,
                       ease: "power1.inOut",
-                    },">")
-                    zs.to('.nav_component', {
-                      backgroundColor: "#e9f0e8",
-                    },"<");
+                    },">");
   
   
                     const hc = gsap.timeline( {
@@ -874,7 +895,10 @@ if (page === "home"){
                     hc.to(".hero_cover", {
                       opacity: 0,
                       ease: "power1.out",
-                    })
+                    });
+                     hc.to('.nav_component', {
+                      backgroundColor: "#e9f0e8",
+                    });
                  
           }
       }
@@ -954,12 +978,13 @@ if (page === "home"){
   timeline.to(line, {
     rotate: 90,
     transformOrigin: "center",
+    stroke: "#40583D",
   });
   timeline.to(circle, {
   strokeDashoffset: 0,
   }, "<")
   timeline.to(circle, {
-   opacity: 0,
+   opacity: 1,
    duration: 0.4,
     }); 
   };
@@ -975,6 +1000,7 @@ if (page === "home"){
   timeline.to(line, {
     rotate: 0,
     transformOrigin: "center",
+    stroke: "#85A781",
   },"<");
   timeline.to(circle,{
     strokeDashoffset: length,
@@ -1079,3 +1105,4 @@ if (page === "home"){
 }; //end of the home page code
 //////////////////////////////////
 
+console.log("last test")

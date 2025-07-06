@@ -66,3 +66,8 @@ transition: transform 0.4s ease-in-out;
 .nav_link::after {
  bottom: 20px;
 }
+
+.item_back-head:hover ~ .item-back_close-menu{
+    fill: red;
+}
+

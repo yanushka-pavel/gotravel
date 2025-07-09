@@ -11,8 +11,8 @@ gsap.to(splitText.chars,{
     stagger: 0.02,
     scrollTrigger: {
         trigger: splitTextTracker,
-        start: "bottom 10%",
-        end: "bottom 30%",
+        start: "top",
+        end: "center",
         scrub: true,
         once: false,
     }

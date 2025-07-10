@@ -2,8 +2,9 @@ const page = document.body.dataset.page  //assingning to variable page current p
 console.log("test-6")
 import "./style.css";//css import
 import { animateSplitText } from "./animations/book-splittext";
-let testSPlitClick = document.querySelector('.heading.l.tc-green-07')
-animateSplitText(testSPlitClick)
+let splitTextAbout = document.querySelector('.heading.l.tc-green-07_48 .span-main')
+
+animateSplitText(splitTextAbout)
 
 
   //logic for nav menu
@@ -868,7 +869,7 @@ if (page === "home"){
                     },"<0.5");
                     zs.to(".scroll-wrap", {
                       opacity: 1,
-                      duration: 5,
+                      duration: 3,
                       ease:"power1.inOut",
                     }, "<0.2");
                     zs.to([embed, ".decoration-wrap"], {

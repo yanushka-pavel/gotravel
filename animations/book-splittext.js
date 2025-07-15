@@ -4,7 +4,7 @@ export function animateSplitText(target){
 const splitText = new SplitType(target, {
     types: 'chars, words',
     tagName: 'span',
-    autoSplit: true,
+   
 })
 gsap.to(splitText.chars,{
     color:"#40583d",

@@ -1,8 +1,8 @@
 const page = document.body.dataset.page  //assingning to variable page current page data-attribute\\
-console.log("test-6")
+// console.log("test-6")
 import "./style.css";//css import
 import { animateSplitText } from "./animations/book-splittext";
-let splitTextAbout = document.querySelector('.heading.l.tc-green-07_48 .span-main')
+let splitTextAbout = document.querySelector('.span-main')
 
 animateSplitText(splitTextAbout)
 
@@ -93,8 +93,8 @@ let animationLocked = false; //flag to lock mouse animtion while additional popu
     let isTouch = window.matchMedia("(pointer: fine)").matches;
 
     if (isLargeScreen && isTouch) {
-    console.log("screen size is large")
-    console.log(window.innerWidth)
+    // console.log("screen size is large")
+    // console.log(window.innerWidth)
       popupMain(); // Run animation
        popupCloseTablet.addEventListener("click", (e)=>{
         e.stopPropagation();
@@ -102,7 +102,7 @@ let animationLocked = false; //flag to lock mouse animtion while additional popu
         
       }, {once: true})
     } else {
-      console.log("the screeen is too small")
+      // console.log("the screeen is too small")
       closeButton.style.visibility = "hidden";
       popupGsapOpen()
       popupCloseTablet.addEventListener("click", (e)=>{
@@ -182,7 +182,7 @@ let animationLocked = false; //flag to lock mouse animtion while additional popu
          closeInfo.style.visibility = "hidden";
          deactivatePopup(); 
       }
-    },{once: true})
+    })
   
     //return to form logic
     clarLinkBack.addEventListener("click", (e)=>{
@@ -217,11 +217,11 @@ let animationLocked = false; //flag to lock mouse animtion while additional popu
       opacity:1,
       ease: "bounce.Out",
   })
-  console.log("1")
+  // console.log("1")
   }
 
   function clarBackToForm (){
-  console.log("problem is here")
+  // console.log("problem is here")
   clarOpen = false;
   clarificationTimeline.fromTo(clarification,{
   scale: 1,
@@ -306,7 +306,7 @@ let animationLocked = false; //flag to lock mouse animtion while additional popu
       opacity: 0,
 
     }, "-=1.5")
-console.log("Popup open animation works")
+// console.log("Popup open animation works")
   }
 
   function popupGsapClose (){//gsap animation OUT for popup container and its content
@@ -367,7 +367,7 @@ popupGsapTLClose.fromTo(sectionPopup, {
       duration: 1,
     },"<")
     
-    console.log("Popup close animation works")
+    // console.log("Popup close animation works")
   }
 
   function deactivatePopup() { // disactivating all the popup logic
@@ -1106,4 +1106,4 @@ if (page === "home"){
 }; //end of the home page code
 //////////////////////////////////
 
-console.log("last test")
+// console.log("last test")
